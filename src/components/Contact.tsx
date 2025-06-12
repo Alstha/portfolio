@@ -31,7 +31,7 @@ export default function Contact() {
       } else {
         setSubmitStatus('error')
       }
-    } catch (error) {
+    } catch (_error) {
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -65,9 +65,9 @@ export default function Contact() {
           {/* Contact Info - Compact Cards */}
           <div className="lg:col-span-1 space-y-4">
             <div className="glass rounded-2xl p-6 border border-premium-600/20 card-hover group">
-              <h3 className="text-xl font-bold text-premium-50 mb-3 hover-scale">Let's Connect</h3>
+              <h3 className="text-xl font-bold text-premium-50 mb-3 hover-scale">Let&apos;s Connect</h3>
               <p className="text-premium-300 text-sm leading-relaxed hover-bright">
-                I'm always excited to discuss AI/ML projects, collaborations, or just chat about technology and innovation.
+                I&apos;m always excited to discuss AI/ML projects, collaborations, or just chat about technology and innovation.
               </p>
             </div>
 
@@ -200,7 +200,7 @@ export default function Contact() {
                   <div className="bg-green-500/10 border border-green-500/30 text-green-400 text-center py-4 px-6 rounded-xl hover-bright">
                     <div className="flex items-center justify-center space-x-2">
                       <span className="text-xl">✓</span>
-                      <span>Message sent successfully! I'll get back to you soon.</span>
+                      <span>Message sent successfully! I&apos;ll get back to you soon.</span>
                     </div>
                   </div>
                 )}

@@ -62,18 +62,3 @@ export async function signOut(): Promise<void> {
   cookieStore.delete('session_token')
 }
 
-export function requireAuth(role?: UserRole) {
-  return async function(request: NextRequest) {
-    const user = await getCurrentUser()
-    
-    if (!user) {
-      return new Response('Unauthorized', { status: 401 })
-    }
-    
-    if (role && user.role !== role) {
-      return new Response('Forbidden', { status: 403 })
-    }
-    
-    return user
-  }
-} 

@@ -15,7 +15,6 @@ export default function Feedback() {
     rating: 0,
     comment: ''
   })
-  const { currentTheme } = useTheme()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -59,7 +58,7 @@ export default function Feedback() {
       <div className="bg-[var(--background)]/90 backdrop-blur-sm rounded-2xl border border-[var(--border)]/50 p-6 shadow-lg max-w-md">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-xl font-bold text-[var(--text-primary)]">
-            How's my portfolio looking?
+            How is my portfolio looking?
           </h3>
           <button
             onClick={() => setShowFeedback(false)}

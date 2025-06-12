@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { useTheme } from '@/contexts/ThemeContext'
 import Image from 'next/image'
 
 interface Project {
@@ -22,7 +21,6 @@ export default function Projects() {
   const [showAllProjects, setShowAllProjects] = useState(false)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     fetchProjects()

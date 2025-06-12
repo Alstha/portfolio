@@ -178,7 +178,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener('themeChange', handleThemeEvent as EventListener)
     return () => window.removeEventListener('themeChange', handleThemeEvent as EventListener)
-  }, [currentTheme])
+  }, [currentTheme, applyTheme])
 
   // Listen for cycle interval change events
   useEffect(() => {
