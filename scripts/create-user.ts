@@ -10,6 +10,7 @@ async function main() {
         name: 'Admin User',
         bio: 'Default admin user',
         avatar: 'https://example.com/avatar.jpg',
+        password: 'default-password', // Added required password field
         github: 'https://github.com/admin',
         linkedin: 'https://linkedin.com/in/admin',
         twitter: 'https://twitter.com/admin',
