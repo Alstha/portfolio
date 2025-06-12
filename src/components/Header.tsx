@@ -1,18 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 
 export default function Header() {
   const [activeSection, setActiveSection] = useState('home')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [previewSection, setPreviewSection] = useState<string | null>(null)
 
-  const sections = [
+  const sections = useMemo(() => [
     { id: 'home', label: 'Home', icon: '●' },
     { id: 'about', label: 'About', icon: '●' },
     { id: 'projects', label: 'Projects', icon: '●' },
     { id: 'contact', label: 'Contact', icon: '●' }
-  ]
+  ], [])
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)

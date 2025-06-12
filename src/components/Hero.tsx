@@ -112,13 +112,13 @@ export default function Hero() {
         {/* Greeting */}
         <div className="mb-8 animate-slide-up">
           <span className="inline-block px-6 py-3 glass rounded-full text-accent-300 font-medium border border-accent-500/20 hover-scale hover-glow">
-            Namaste! 🙏
+            Namaste! &apos; 🙏
           </span>
         </div>
 
         {/* Main Heading */}
         <h1 className="text-5xl md:text-7xl font-bold text-premium-50 mb-6 leading-tight animate-slide-up">
-          Hi, I'm{' '}
+          Hi, I&apos;m{' '}
           <span className="gradient-text hover-scale name-effect cursor-pointer">
             Alson Shrestha
           </span>
@@ -141,7 +141,7 @@ export default function Hero() {
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             className="px-8 py-4 glass border border-premium-600 text-premium-300 font-semibold rounded-lg hover:border-premium-500 hover:text-premium-100 text-lg btn-linger btn-shimmer"
           >
-            Let's Connect
+            Let&apos;s Connect
           </button>
         </div>
       </div>

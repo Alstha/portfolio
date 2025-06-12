@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useTheme } from '@/contexts/ThemeContext'
+import Image from 'next/image'
 
 interface Project {
   id: string
@@ -18,16 +19,12 @@ interface Project {
 }
 
 export default function Projects() {
-  const [activeProject, setActiveProject] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
   const [showAllProjects, setShowAllProjects] = useState(false)
   const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const { currentTheme } = useTheme()
 
   useEffect(() => {
-    setIsVisible(true)
     fetchProjects()
   }, [])
 
@@ -43,18 +40,6 @@ export default function Projects() {
       console.error('Error fetching projects:', error)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const scrollToProject = (index: number) => {
-    if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current
-      const projectWidth = container.offsetWidth
-      container.scrollTo({
-        left: index * projectWidth,
-        behavior: 'smooth'
-      })
-      setActiveProject(index)
     }
   }
 
@@ -100,10 +85,12 @@ export default function Projects() {
               <div className="bg-[var(--background)]/30 backdrop-blur-sm rounded-2xl border border-[var(--border)]/50 p-6 h-full">
                 {project.image && (
                   <div className="relative h-48 mb-6 rounded-xl overflow-hidden group">
-                    <img
+                    <Image
                       src={project.image}
                       alt={project.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      width={200}
+                      height={200}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </div>
