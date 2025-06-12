@@ -6,9 +6,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   if (!id) {
     return NextResponse.json({ error: 'Feedback ID is required' }, { status: 400 })
   }
-
   try {
-    await prisma.feedback.delete({
+    await prisma.feedbacks.delete({
       where: { id }
     })
     return NextResponse.json({ success: true })
