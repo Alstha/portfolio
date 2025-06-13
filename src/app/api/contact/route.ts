@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { requireAuth } from '@/lib/auth'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const user = await requireAuth('insider')(request)
+    const user = await requireAuth('insider')()
     if (user instanceof Response) return user
 
     const contacts = await prisma.contact.findMany({

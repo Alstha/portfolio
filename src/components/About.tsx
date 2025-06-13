@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 export default function About() {
   const [activeCard, setActiveCard] = useState(0)
@@ -145,10 +146,12 @@ export default function About() {
                     
                     {/* Image Container */}
                     <div className="relative w-full h-full rounded-full border-4 border-accent overflow-hidden hover:scale-105 transition-transform duration-500">
-                      <img
+                      <Image
                         src="/profile.jpeg"
                         alt="Alson Shrestha profile"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        priority
                       />
                     </div>
 

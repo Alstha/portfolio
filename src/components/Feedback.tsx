@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useTheme } from '@/contexts/ThemeContext'
 
 interface FeedbackForm {
   name: string

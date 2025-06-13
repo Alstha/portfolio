@@ -1,19 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { requireAuth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
+
+type RouteSegment = {
+  params: Promise<{ id: string }>
+}
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id
-  if (!id) {
-    return NextResponse.json({ error: 'Contact ID is required' }, { status: 400 })
-  }
-
+  segment: RouteSegment
+): Promise<NextResponse> {
   try {
-    const user = await requireAuth('insider')(request)
-    if (user instanceof Response) return user
+    const { id } = await segment.params
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'insider') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     const contact = await prisma.contact.findUnique({
       where: { id }
@@ -26,22 +28,23 @@ export async function GET(
     return NextResponse.json(contact)
   } catch (error) {
     console.error('Error fetching contact:', error)
-    return NextResponse.json({ error: 'Failed to fetch contact' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to fetch contact' },
+      { status: 500 }
+    )
   }
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id
-  if (!id) {
-    return NextResponse.json({ error: 'Contact ID is required' }, { status: 400 })
-  }
-
+  segment: RouteSegment
+): Promise<NextResponse> {
   try {
-    const user = await requireAuth('insider')(request)
-    if (user instanceof Response) return user
+    const { id } = await segment.params
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'insider') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     const body = await request.json()
     const { name, email, message } = body
@@ -61,29 +64,34 @@ export async function PUT(
     return NextResponse.json(updatedContact)
   } catch (error) {
     console.error('Error updating contact:', error)
-    return NextResponse.json({ error: 'Failed to update contact' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to update contact' },
+      { status: 500 }
+    )
   }
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id
-  if (!id) {
-    return NextResponse.json({ error: 'Contact ID is required' }, { status: 400 })
-  }
-
+  segment: RouteSegment
+): Promise<NextResponse> {
   try {
-    const user = await requireAuth('insider')(request)
-    if (user instanceof Response) return user
+    const { id } = await segment.params
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'insider') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     await prisma.contact.delete({
       where: { id }
     })
+
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error('Error deleting contact:', error)
-    return NextResponse.json({ error: 'Failed to delete contact' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to delete contact' },
+      { status: 500 }
+    )
   }
 } 

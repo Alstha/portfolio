@@ -8,7 +8,9 @@ async function main() {
     update: {},
     create: {
       email: 'admin@example.com',
+      password: 'adminpassword', // TODO: Change to a secure hash in production
       name: 'Admin User',
+      role: 'insider',
       bio: 'Default admin user',
       avatar: 'https://example.com/avatar.jpg',
       github: 'https://github.com/admin',

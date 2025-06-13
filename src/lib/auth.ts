@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers'
-import { NextRequest } from 'next/server'
 
 export type UserRole = 'insider' | 'outsider'
 
@@ -60,5 +59,26 @@ export async function createSession(user: User): Promise<string> {
 export async function signOut(): Promise<void> {
   const cookieStore = await cookies()
   cookieStore.delete('session_token')
+}
+
+export function requireAuth(requiredRole: UserRole) {
+  return async () => {
+    const cookieStore = await cookies()
+    const sessionToken = cookieStore.get('session_token')?.value
+
+    if (!sessionToken) {
+      return new Response('Unauthorized', { status: 401 })
+    }
+
+    try {
+      const user = JSON.parse(decodeURIComponent(sessionToken))
+      if (user.role !== requiredRole) {
+        return new Response('Forbidden', { status: 403 })
+      }
+      return user
+    } catch {
+      return new Response('Unauthorized', { status: 401 })
+    }
+  }
 }
 

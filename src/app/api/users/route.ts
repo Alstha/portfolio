@@ -3,9 +3,9 @@ import { prisma } from '@/lib/db'
 import { requireAuth } from '@/lib/auth'
 import bcrypt from 'bcryptjs'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const user = await requireAuth('insider')(request)
+    const user = await requireAuth('insider')()
     if (user instanceof Response) return user
 
     const users = await prisma.user.findMany({

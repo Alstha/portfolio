@@ -1,6 +1,6 @@
 'use client'
 
-import { useContext, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTheme } from '@/contexts/ThemeContext'
 
 export default function AnimatedBackground() {

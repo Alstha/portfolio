@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ export default function SignIn() {
         const errorData = await response.json()
         setError(errorData.error || 'Sign in failed')
       }
-    } catch (error) {
+    } catch {
       setError('Network error. Please try again.')
     } finally {
       setIsSubmitting(false)
@@ -152,12 +153,12 @@ export default function SignIn() {
 
         {/* Back to Home */}
         <div className="text-center mt-6">
-          <a
+          <Link
             href="/"
             className="text-slate-400 hover:text-white transition-colors"
           >
             ← Back to Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

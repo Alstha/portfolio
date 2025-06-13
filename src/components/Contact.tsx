@@ -10,6 +10,7 @@ export default function Contact() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,7 +32,9 @@ export default function Contact() {
       } else {
         setSubmitStatus('error')
       }
-    } catch (_error) {
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      setError('Failed to submit form. Please try again.')
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -209,7 +212,7 @@ export default function Contact() {
                   <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-center py-4 px-6 rounded-xl hover-bright">
                     <div className="flex items-center justify-center space-x-2">
                       <span className="text-xl">⚠</span>
-                      <span>Something went wrong. Please try again.</span>
+                      <span>{error}</span>
                     </div>
                   </div>
                 )}

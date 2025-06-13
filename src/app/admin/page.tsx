@@ -1,22 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTheme } from '@/contexts/ThemeContext'
+import Image from 'next/image'
 
 interface User {
   id: string
   role: 'insider' | 'outsider'
   name: string
   email: string
-}
-
-interface Contact {
-  id: string
-  name: string
-  email: string
-  message: string
-  createdAt: string
+  bio?: string
+  avatar?: string
+  github?: string
+  linkedin?: string
+  twitter?: string
+  website?: string
 }
 
 interface Project {
@@ -28,18 +27,6 @@ interface Project {
   liveUrl?: string
   technologies: string
   featured: boolean
-  createdAt: string
-  updatedAt: string
-  userId: string
-}
-
-interface Blog {
-  id: string
-  title: string
-  content: string
-  excerpt?: string
-  image?: string
-  published: boolean
   createdAt: string
   updatedAt: string
   userId: string
@@ -57,10 +44,13 @@ export default function AdminPanel() {
   const [user, setUser] = useState<User | null>(null)
   const [activeTab, setActiveTab] = useState<'database' | 'settings'>('database')
   const [activeDatabaseTab, setActiveDatabaseTab] = useState<'contacts' | 'projects' | 'feedback' | 'users'>('contacts')
-  const [data, setData] = useState<any[]>([])
+  const [users, setUsers] = useState<User[]>([])
+  const [projects, setProjects] = useState<Project[]>([])
+  const [feedback, setFeedback] = useState<Feedback[]>([])
   const [loading, setLoading] = useState(true)
-  const [editingRecord, setEditingRecord] = useState<any>(null)
-  const [showAddForm, setShowAddForm] = useState(false)
+  const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [editingProject, setEditingProject] = useState<Project | null>(null)
+  const [editingFeedback, setEditingFeedback] = useState<Feedback | null>(null)
   const [cycleInterval, setCycleInterval] = useState(10)
   const [showAddProject, setShowAddProject] = useState(false)
   const [newProject, setNewProject] = useState({
@@ -86,26 +76,9 @@ export default function AdminPanel() {
     website: ''
   })
   const router = useRouter()
-  
-  // Use theme context
   const { currentTheme, themes, setTheme, autoCycle, setAutoCycle } = useTheme()
 
-  useEffect(() => {
-    checkAuth()
-    // Load saved cycle interval from localStorage
-    const savedInterval = localStorage.getItem('themeCycleInterval')
-    if (savedInterval) {
-      setCycleInterval(parseInt(savedInterval))
-    }
-  }, [])
-
-  useEffect(() => {
-    if (user) {
-      fetchData()
-    }
-  }, [user, activeDatabaseTab])
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const response = await fetch('/api/auth/me')
       if (response.ok) {
@@ -118,97 +91,134 @@ export default function AdminPanel() {
       } else {
         router.push('/signin')
       }
-    } catch (error) {
+    } catch {
       router.push('/signin')
     }
-  }
+  }, [router])
 
-  const fetchData = async () => {
-    if (activeTab === 'settings') return // Don't fetch data for settings tab
-    
+  const fetchUsers = useCallback(async () => {
     setLoading(true)
     try {
-      const endpoint = activeDatabaseTab === 'contacts' ? '/api/contact' : 
-                      activeDatabaseTab === 'projects' ? '/api/projects' : 
-                      activeDatabaseTab === 'feedback' ? '/api/feedback' : '/api/users'
-      
-      console.log('Fetching from endpoint:', endpoint)
-      const response = await fetch(endpoint)
-      console.log('Response status:', response.status)
-      
+      const response = await fetch('/api/users')
       if (response.ok) {
         const result = await response.json()
-        console.log('Fetched data:', result)
-        setData(Array.isArray(result) ? result : [])
+        setUsers(Array.isArray(result) ? result : [])
       } else {
-        const errorText = await response.text()
-        console.error('API Error:', response.status, errorText)
-        setData([])
+        setUsers([])
       }
-    } catch (error) {
-      console.error('Error fetching data:', error)
-      setData([])
+    } catch {
+      setUsers([])
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
+
+  const fetchProjects = useCallback(async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/projects')
+      if (response.ok) {
+        const result = await response.json()
+        setProjects(Array.isArray(result) ? result : [])
+      } else {
+        setProjects([])
+      }
+    } catch {
+      setProjects([])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const fetchFeedback = useCallback(async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/feedback')
+      if (response.ok) {
+        const result = await response.json()
+        setFeedback(Array.isArray(result) ? result : [])
+      } else {
+        setFeedback([])
+      }
+    } catch {
+      setFeedback([])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    checkAuth()
+    const savedInterval = localStorage.getItem('themeCycleInterval')
+    if (savedInterval) {
+      setCycleInterval(parseInt(savedInterval))
+    }
+  }, [checkAuth])
+
+  useEffect(() => {
+    if (user) {
+      if (activeDatabaseTab === 'users') fetchUsers()
+      if (activeDatabaseTab === 'projects') fetchProjects()
+      if (activeDatabaseTab === 'feedback') fetchFeedback()
+      // Add contacts fetch if needed
+    }
+  }, [user, activeDatabaseTab, fetchUsers, fetchProjects, fetchFeedback])
 
   const handleSignOut = async () => {
     try {
       await fetch('/api/auth/signout', { method: 'POST' })
       router.push('/signin')
-    } catch (error) {
-      console.error('Sign out error:', error)
-    }
+    } catch {}
   }
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this record?')) return
-
     try {
       const endpoint = activeDatabaseTab === 'contacts' ? `/api/contact/${id}` : 
                       activeDatabaseTab === 'projects' ? `/api/projects/${id}` : 
                       activeDatabaseTab === 'feedback' ? `/api/feedback/${id}` : `/api/users/${id}`
-      
       const response = await fetch(endpoint, { method: 'DELETE' })
       if (response.ok) {
-        fetchData()
+        if (activeDatabaseTab === 'users') fetchUsers()
+        if (activeDatabaseTab === 'projects') fetchProjects()
+        if (activeDatabaseTab === 'feedback') fetchFeedback()
       }
-    } catch (error) {
-      console.error('Delete error:', error)
+    } catch {}
+  }
+
+  const handleEdit = async (record: User | Project | Feedback) => {
+    if (record) {
+      if (activeDatabaseTab === 'users') setEditingUser(record as User)
+      if (activeDatabaseTab === 'projects') setEditingProject(record as Project)
+      if (activeDatabaseTab === 'feedback') setEditingFeedback(record as Feedback)
     }
   }
 
-  const handleEdit = async (record: any) => {
-    setEditingRecord(record)
-  }
-
-  const handleSaveEdit = async (updatedData: any) => {
+  const handleSaveEdit = async (updatedData: User | Project | Feedback) => {
+    if (!updatedData || typeof updatedData !== 'object' || !('id' in updatedData)) return;
     try {
-      const endpoint = activeDatabaseTab === 'contacts' ? `/api/contact/${updatedData.id}` : 
-                      activeDatabaseTab === 'projects' ? `/api/projects/${updatedData.id}` : 
-                      activeDatabaseTab === 'feedback' ? `/api/feedback/${updatedData.id}` : `/api/users/${updatedData.id}`
-      
+      const endpoint = activeDatabaseTab === 'contacts' ? `/api/contact/${(updatedData as {id: string}).id}` : 
+                      activeDatabaseTab === 'projects' ? `/api/projects/${(updatedData as {id: string}).id}` : 
+                      activeDatabaseTab === 'feedback' ? `/api/feedback/${(updatedData as {id: string}).id}` : `/api/users/${(updatedData as {id: string}).id}`
       const response = await fetch(endpoint, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)
       })
-      
       if (response.ok) {
-        setEditingRecord(null)
-        fetchData()
+        if (activeDatabaseTab === 'users') setEditingUser(null)
+        if (activeDatabaseTab === 'projects') setEditingProject(null)
+        if (activeDatabaseTab === 'feedback') setEditingFeedback(null)
+        if (activeDatabaseTab === 'users') fetchUsers()
+        if (activeDatabaseTab === 'projects') fetchProjects()
+        if (activeDatabaseTab === 'feedback') fetchFeedback()
       }
-    } catch (error) {
-      console.error('Update error:', error)
-    }
+    } catch {}
   }
 
   const handleCycleIntervalChange = (newInterval: number) => {
     setCycleInterval(newInterval)
     localStorage.setItem('themeCycleInterval', newInterval.toString())
-    
-    // Trigger theme change event to update the cycling interval
     window.dispatchEvent(new CustomEvent('themeCycleIntervalChange', {
       detail: { interval: newInterval }
     }))
@@ -216,19 +226,11 @@ export default function AdminPanel() {
 
   const handleAddUser = async () => {
     try {
-      const response = await fetch('/api/users', {
+      await fetch('/api/users', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newUser),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUser)
       })
-
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.error || 'Failed to add user')
-      }
-
       setShowAddUser(false)
       setNewUser({
         name: '',
@@ -242,21 +244,9 @@ export default function AdminPanel() {
         twitter: '',
         website: ''
       })
-      fetchData()
-    } catch (error) {
-      alert(`Error: ${error instanceof Error ? error.message : 'Error adding user'}`)
-    }
-  }
-
-  const handleDeleteFeedback = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this feedback?')) return
-    try {
-      const response = await fetch(`/api/feedback/${id}`, { method: 'DELETE' })
-      if (response.ok) {
-        fetchData()
-      }
-    } catch (error) {
-      console.error('Delete feedback error:', error)
+      if (activeDatabaseTab === 'users') fetchUsers()
+    } catch {
+      alert('Error adding user')
     }
   }
 
@@ -265,11 +255,11 @@ export default function AdminPanel() {
       return <div className="text-center py-8 text-slate-400">Loading...</div>
     }
 
-    if (data.length === 0) {
+    if (users.length === 0 && projects.length === 0 && feedback.length === 0) {
       return <div className="text-center py-8 text-slate-400">No records found</div>
     }
 
-    const columns = Object.keys(data[0]).filter(key => key !== 'id')
+    const columns = Object.keys(users[0] || projects[0] || feedback[0] || {})
 
     return (
       <div className="overflow-x-auto">
@@ -285,40 +275,44 @@ export default function AdminPanel() {
             </tr>
           </thead>
           <tbody>
-            {data.map((record, index) => (
-              <tr key={record.id || index} className="border-t border-slate-700/30">
+            {users.map((user) => (
+              <tr key={user.id} className="border-t border-slate-700/30">
                 {columns.map(column => (
                   <td key={column} className="px-4 py-3 text-slate-300">
-                    {editingRecord?.id === record.id ? (
+                    {editingUser?.id === user.id ? (
                       <input
                         type="text"
-                        value={editingRecord[column] || ''}
-                        onChange={(e) => setEditingRecord({
-                          ...editingRecord,
+                        value={
+                          typeof editingUser[column as keyof User] === 'boolean'
+                            ? String(editingUser[column as keyof User])
+                            : editingUser[column as keyof User] || ''
+                        }
+                        onChange={(e) => setEditingUser({
+                          ...editingUser,
                           [column]: e.target.value
                         })}
                         className="w-full px-2 py-1 bg-slate-900/50 border border-slate-600/50 rounded text-white"
                       />
                     ) : (
                       <div className="max-w-xs truncate">
-                        {typeof record[column] === 'boolean' 
-                          ? (record[column] ? 'Yes' : 'No')
-                          : record[column]?.toString() || ''}
+                        {typeof user[column as keyof User] === 'boolean' 
+                          ? (user[column as keyof User] ? 'Yes' : 'No')
+                          : user[column as keyof User]?.toString() || ''}
                       </div>
                     )}
                   </td>
                 ))}
                 <td className="px-4 py-3">
-                  {editingRecord?.id === record.id ? (
+                  {editingUser?.id === user.id ? (
                     <div className="flex space-x-2">
                       <button
-                        onClick={() => handleSaveEdit(editingRecord)}
+                        onClick={() => handleSaveEdit(editingUser)}
                         className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
                       >
                         Save
                       </button>
                       <button
-                        onClick={() => setEditingRecord(null)}
+                        onClick={() => setEditingUser(null)}
                         className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-700"
                       >
                         Cancel
@@ -327,13 +321,133 @@ export default function AdminPanel() {
                   ) : (
                     <div className="flex space-x-2">
                       <button
-                        onClick={() => handleEdit(record)}
+                        onClick={() => handleEdit(user)}
                         className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(record.id)}
+                        onClick={() => handleDelete(user.id)}
+                        className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+            {projects.map((project) => (
+              <tr key={project.id} className="border-t border-slate-700/30">
+                {columns.map(column => (
+                  <td key={column} className="px-4 py-3 text-slate-300">
+                    {editingProject?.id === project.id ? (
+                      <input
+                        type="text"
+                        value={
+                          typeof editingProject[column as keyof Project] === 'boolean'
+                            ? (editingProject[column as keyof Project] ? 'true' : 'false')
+                            : String(editingProject[column as keyof Project] ?? '')
+                        }
+                        onChange={(e) => setEditingProject({
+                          ...editingProject,
+                          [column]: e.target.value === 'true'
+                        })}
+                        className="w-full px-2 py-1 bg-slate-900/50 border border-slate-600/50 rounded text-white"
+                      />
+                    ) : (
+                      <div className="max-w-xs truncate">
+                        {typeof project[column as keyof Project] === 'boolean' 
+                          ? (project[column as keyof Project] ? 'Yes' : 'No')
+                          : project[column as keyof Project]?.toString() || ''}
+                      </div>
+                    )}
+                  </td>
+                ))}
+                <td className="px-4 py-3">
+                  {editingProject?.id === project.id ? (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleSaveEdit(editingProject)}
+                        className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setEditingProject(null)}
+                        className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-700"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleEdit(project)}
+                        className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(project.id)}
+                        className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}
+            {feedback.map((fb) => (
+              <tr key={fb.id} className="border-t border-slate-700/30">
+                {columns.map(column => (
+                  <td key={column} className="px-4 py-3 text-slate-300">
+                    {editingFeedback?.id === fb.id ? (
+                      <input
+                        type="text"
+                        value={editingFeedback[column as keyof Feedback] || ''}
+                        onChange={(e) => setEditingFeedback({
+                          ...editingFeedback,
+                          [column]: e.target.value
+                        })}
+                        className="w-full px-2 py-1 bg-slate-900/50 border border-slate-600/50 rounded text-white"
+                      />
+                    ) : (
+                      <div className="max-w-xs truncate">
+                        {typeof fb[column as keyof Feedback] === 'boolean' 
+                          ? (fb[column as keyof Feedback] ? 'Yes' : 'No')
+                          : fb[column as keyof Feedback]?.toString() || ''}
+                      </div>
+                    )}
+                  </td>
+                ))}
+                <td className="px-4 py-3">
+                  {editingFeedback?.id === fb.id ? (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleSaveEdit(editingFeedback)}
+                        className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => setEditingFeedback(null)}
+                        className="px-3 py-1 bg-slate-600 text-white rounded text-sm hover:bg-slate-700"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => handleEdit(fb)}
+                        className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(fb.id)}
                         className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
                       >
                         Delete
@@ -522,7 +636,7 @@ export default function AdminPanel() {
           tech: '',
           featured: false
         })
-        fetchData()
+        fetchProjects()
       } catch (error) {
         alert(`Error: ${error instanceof Error ? error.message : 'Error adding project'}`)
       }
@@ -629,13 +743,13 @@ export default function AdminPanel() {
           </div>
         )}
 
-        {editingRecord && (
+        {editingProject && (
           <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm z-50 flex items-center justify-center p-6">
             <div className="bg-slate-800 rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold text-white">Edit Project</h3>
                 <button
-                  onClick={() => setEditingRecord(null)}
+                  onClick={() => setEditingProject(null)}
                   className="text-slate-400 hover:text-white transition-colors"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -648,36 +762,36 @@ export default function AdminPanel() {
                 <input
                   type="text"
                   placeholder="Title"
-                  value={editingRecord.title}
-                  onChange={(e) => setEditingRecord({ ...editingRecord, title: e.target.value })}
+                  value={editingProject.title}
+                  onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
                   className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <textarea
                   placeholder="Description"
-                  value={editingRecord.description}
-                  onChange={(e) => setEditingRecord({ ...editingRecord, description: e.target.value })}
+                  value={editingProject.description}
+                  onChange={(e) => setEditingProject({ ...editingProject, description: e.target.value })}
                   className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                   rows={3}
                 />
                 <input
                   type="text"
                   placeholder="Image URL"
-                  value={editingRecord.image}
-                  onChange={(e) => setEditingRecord({ ...editingRecord, image: e.target.value })}
+                  value={editingProject.image}
+                  onChange={(e) => setEditingProject({ ...editingProject, image: e.target.value })}
                   className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
                   placeholder="GitHub URL"
-                  value={editingRecord.githubUrl}
-                  onChange={(e) => setEditingRecord({ ...editingRecord, githubUrl: e.target.value })}
+                  value={editingProject.githubUrl}
+                  onChange={(e) => setEditingProject({ ...editingProject, githubUrl: e.target.value })}
                   className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
                   placeholder="Live URL"
-                  value={editingRecord.liveUrl}
-                  onChange={(e) => setEditingRecord({ ...editingRecord, liveUrl: e.target.value })}
+                  value={editingProject.liveUrl}
+                  onChange={(e) => setEditingProject({ ...editingProject, liveUrl: e.target.value })}
                   className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
@@ -685,14 +799,14 @@ export default function AdminPanel() {
                   placeholder="Technologies (comma-separated)"
                   value={(() => {
                     try {
-                      const techs = JSON.parse(editingRecord.technologies)
+                      const techs = JSON.parse(editingProject.technologies)
                       return Array.isArray(techs) ? techs.join(', ') : ''
-                    } catch (error) {
+                    } catch {
                       return ''
                     }
                   })()}
-                  onChange={(e) => setEditingRecord({ 
-                    ...editingRecord, 
+                  onChange={(e) => setEditingProject({ 
+                    ...editingProject, 
                     technologies: JSON.stringify(e.target.value.split(',').map(t => t.trim()))
                   })}
                   className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -700,21 +814,21 @@ export default function AdminPanel() {
                 <div className="flex items-center">
                   <input
                     type="checkbox"
-                    checked={editingRecord.featured}
-                    onChange={(e) => setEditingRecord({ ...editingRecord, featured: e.target.checked })}
+                    checked={editingProject.featured}
+                    onChange={(e) => setEditingProject({ ...editingProject, featured: e.target.checked })}
                     className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500"
                   />
                   <label className="ml-2 text-slate-300">Featured Project</label>
                 </div>
                 <div className="flex justify-end space-x-4 pt-4">
                   <button
-                    onClick={() => setEditingRecord(null)}
+                    onClick={() => setEditingProject(null)}
                     className="px-6 py-2 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
-                    onClick={() => handleSaveEdit(editingRecord)}
+                    onClick={() => handleSaveEdit(editingProject)}
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                   >
                     Save Changes
@@ -726,11 +840,13 @@ export default function AdminPanel() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.map((project) => (
+          {projects.map((project) => (
             <div key={project.id} className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
-              <img
-                src={project.image}
+              <Image
+                src={project.image || '/default-project.png'}
                 alt={project.title}
+                width={256}
+                height={128}
                 className="w-full h-48 object-cover rounded-lg mb-4"
               />
               <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
@@ -747,7 +863,7 @@ export default function AdminPanel() {
                         {tech}
                       </span>
                     )) : null;
-                  } catch (error) {
+                  } catch (error: unknown) {
                     console.error('Error parsing technologies:', error);
                     return null;
                   }
@@ -936,24 +1052,20 @@ export default function AdminPanel() {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.map((user) => (
+          {users.map((user) => (
             <div key={user.id} className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
               <div className="flex items-center space-x-4 mb-4">
-                <img
+                <Image
                   src={user.avatar || '/default-avatar.png'}
                   alt={user.name}
+                  width={64}
+                  height={64}
                   className="w-16 h-16 rounded-full object-cover"
                 />
                 <div>
                   <h3 className="text-xl font-bold text-white">{user.name}</h3>
                   <p className="text-slate-400">{user.email}</p>
-                  <span className={`px-2 py-1 rounded text-sm ${
-                    user.role === 'insider' 
-                      ? 'bg-purple-500/20 text-purple-300' 
-                      : 'bg-blue-500/20 text-blue-300'
-                  }`}>
-                    {user.role === 'insider' ? 'Admin' : 'User'}
-                  </span>
+                  <span className={`px-2 py-1 rounded text-sm ${user.role === 'insider' ? 'bg-purple-500/20 text-purple-300' : 'bg-blue-500/20 text-blue-300'}`}>{user.role === 'insider' ? 'Admin' : 'User'}</span>
                 </div>
               </div>
               <p className="text-slate-400 mb-4">{user.bio}</p>
@@ -1019,10 +1131,7 @@ export default function AdminPanel() {
       <div className="space-y-6">
         <h2 className="text-2xl font-bold text-white mb-4">Feedback</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data.length === 0 && (
-            <div className="col-span-full text-center text-slate-400">No feedback yet.</div>
-          )}
-          {data.map((fb) => (
+          {feedback.map((fb) => (
             <div key={fb.id} className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
               <div className="flex items-center mb-2">
                 <span className="text-xl font-bold text-white mr-2">{fb.name}</span>
@@ -1032,7 +1141,7 @@ export default function AdminPanel() {
               <div className="text-xs text-slate-500 mb-2">{new Date(fb.createdAt).toLocaleString()}</div>
               <div className="flex justify-end">
                 <button
-                  onClick={() => handleDeleteFeedback(fb.id)}
+                  onClick={() => handleDelete(fb.id)}
                   className="text-red-400 hover:text-red-300 transition-colors text-sm"
                 >
                   Delete
@@ -1084,7 +1193,7 @@ export default function AdminPanel() {
           ].map(tab => (
             <button
               key={tab.key}
-              onClick={() => setActiveTab(tab.key as any)}
+              onClick={() => setActiveTab(tab.key as 'database' | 'settings')}
               className={`px-6 py-3 rounded-md font-medium transition-colors ${
                 activeTab === tab.key
                   ? 'bg-blue-600 text-white'
@@ -1107,7 +1216,7 @@ export default function AdminPanel() {
             ].map(tab => (
               <button
                 key={tab.key}
-                onClick={() => setActiveDatabaseTab(tab.key as any)}
+                onClick={() => setActiveDatabaseTab(tab.key as 'contacts' | 'projects' | 'feedback' | 'users')}
                 className={`px-4 py-2 rounded-md font-medium transition-colors flex items-center space-x-2 ${
                   activeDatabaseTab === tab.key
                     ? 'bg-blue-600 text-white'
@@ -1137,7 +1246,7 @@ export default function AdminPanel() {
                 {activeDatabaseTab.charAt(0).toUpperCase() + activeDatabaseTab.slice(1)} Management
               </h2>
               <div className="text-slate-400">
-                {data.length} record{data.length !== 1 ? 's' : ''}
+                {users.length + projects.length + feedback.length} record{users.length + projects.length + feedback.length !== 1 ? 's' : ''}
               </div>
             </div>
             
