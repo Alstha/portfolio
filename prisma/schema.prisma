@@ -55,6 +55,7 @@ model Blog {
   content   String
   excerpt   String?
   image     String?
+  tags      String?  // Will store JSON string of tags array
   published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
