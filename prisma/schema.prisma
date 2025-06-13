@@ -57,12 +57,12 @@ model Blog {
   excerpt   String?
   image     String?
   tags      String?  // Will store JSON string of tags array
+  comments  String?  // Will store JSON string of comments array
   published Boolean  @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   userId    String
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  comments  Comment[]
 }
 
 model Comment {

@@ -10,23 +10,21 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const comments = await prisma.comment.findMany({
-      where: {
-        blogId: params.id,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
-            avatar: true,
-          },
-        },
+    const blog = await prisma.blog.findUnique({
+      where: { id: params.id },
+      select: {
+        comments: true,
       },
     })
 
+    if (!blog) {
+      return NextResponse.json(
+        { error: 'Blog not found' },
+        { status: 404 }
+      )
+    }
+
+    const comments = blog.comments ? JSON.parse(blog.comments) : []
     return NextResponse.json(comments)
   } catch (error) {
     console.error('Error fetching comments:', error)
@@ -60,31 +58,39 @@ export async function POST(
       )
     }
 
-    const comment = await prisma.comment.create({
-      data: {
-        content,
-        blog: {
-          connect: {
-            id: params.id,
-          },
-        },
-        user: {
-          connect: {
-            id: user.id,
-          },
-        },
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
-            avatar: true,
-          },
-        },
+    const blog = await prisma.blog.findUnique({
+      where: { id: params.id },
+      select: {
+        comments: true,
       },
     })
 
-    return NextResponse.json(comment, { status: 201 })
+    if (!blog) {
+      return NextResponse.json(
+        { error: 'Blog not found' },
+        { status: 404 }
+      )
+    }
+
+    const currentComments = blog.comments ? JSON.parse(blog.comments) : []
+    const newComment = {
+      id: crypto.randomUUID(),
+      content,
+      userId: user.id,
+      userName: user.name,
+      userAvatar: user.avatar,
+      createdAt: new Date().toISOString(),
+    }
+
+    const updatedComments = [...currentComments, newComment]
+    const updatedBlog = await prisma.blog.update({
+      where: { id: params.id },
+      data: {
+        comments: JSON.stringify(updatedComments),
+      },
+    })
+
+    return NextResponse.json(newComment, { status: 201 })
   } catch (error) {
     console.error('Error creating comment:', error)
     return NextResponse.json(
