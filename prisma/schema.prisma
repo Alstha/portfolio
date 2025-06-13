@@ -27,6 +27,7 @@ model User {
   website   String?
   projects  Project[]
   blogs     Blog[]
+  comments  Comment[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -50,15 +51,27 @@ model Project {
 }
 
 model Blog {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   title     String
   content   String
   excerpt   String?
   image     String?
   tags      String?  // Will store JSON string of tags array
   published Boolean  @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments  Comment[]
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  blogId    String
+  blog      Blog     @relation(fields: [blogId], references: [id], onDelete: Cascade)
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
