@@ -40,6 +40,14 @@ interface Feedback {
   createdAt: string
 }
 
+interface Contact {
+  id: string
+  name: string
+  email: string
+  message: string
+  createdAt: string
+}
+
 export default function AdminPanel() {
   const [user, setUser] = useState<User | null>(null)
   const [activeTab, setActiveTab] = useState<'database' | 'settings'>('database')
@@ -47,6 +55,7 @@ export default function AdminPanel() {
   const [users, setUsers] = useState<User[]>([])
   const [projects, setProjects] = useState<Project[]>([])
   const [feedback, setFeedback] = useState<Feedback[]>([])
+  const [contacts, setContacts] = useState<Contact[]>([])
   const [loading, setLoading] = useState(true)
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
@@ -147,6 +156,23 @@ export default function AdminPanel() {
     }
   }, [])
 
+  const fetchContacts = useCallback(async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/contact')
+      if (response.ok) {
+        const result = await response.json()
+        setContacts(Array.isArray(result) ? result : [])
+      } else {
+        setContacts([])
+      }
+    } catch {
+      setContacts([])
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   useEffect(() => {
     checkAuth()
     const savedInterval = localStorage.getItem('themeCycleInterval')
@@ -160,9 +186,9 @@ export default function AdminPanel() {
       if (activeDatabaseTab === 'users') fetchUsers()
       if (activeDatabaseTab === 'projects') fetchProjects()
       if (activeDatabaseTab === 'feedback') fetchFeedback()
-      // Add contacts fetch if needed
+      if (activeDatabaseTab === 'contacts') fetchContacts()
     }
-  }, [user, activeDatabaseTab, fetchUsers, fetchProjects, fetchFeedback])
+  }, [user, activeDatabaseTab, fetchUsers, fetchProjects, fetchFeedback, fetchContacts])
 
   const handleSignOut = async () => {
     try {
@@ -1154,6 +1180,34 @@ export default function AdminPanel() {
     )
   }
 
+  const renderContactsManagement = () => {
+    return (
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-white mb-4">Contacts</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {contacts.map((contact) => (
+            <div key={contact.id} className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
+              <div className="flex items-center mb-2">
+                <span className="text-xl font-bold text-white mr-2">{contact.name}</span>
+                <span className="ml-auto text-blue-400 font-bold">{contact.email}</span>
+              </div>
+              <div className="text-slate-300 mb-2">{contact.message}</div>
+              <div className="text-xs text-slate-500 mb-2">{new Date(contact.createdAt).toLocaleString()}</div>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => handleDelete(contact.id)}
+                  className="text-red-400 hover:text-red-300 transition-colors text-sm"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   if (!user) {
     return <div className="min-h-screen bg-slate-900 flex items-center justify-center">Loading...</div>
   }
@@ -1239,6 +1293,8 @@ export default function AdminPanel() {
           renderUserManagement()
         ) : activeDatabaseTab === 'feedback' ? (
           renderFeedbackManagement()
+        ) : activeDatabaseTab === 'contacts' ? (
+          renderContactsManagement()
         ) : (
           <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
             <div className="flex items-center justify-between mb-6">

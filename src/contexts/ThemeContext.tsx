@@ -116,6 +116,8 @@ interface ThemeContextType {
   setTheme: (themeId: string) => void
   autoCycle: boolean
   setAutoCycle: (enabled: boolean) => void
+  cycleInterval: number
+  setCycleInterval: (interval: number) => void
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
@@ -200,7 +202,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       themes,
       setTheme: handleThemeChange,
       autoCycle,
-      setAutoCycle: handleAutoCycleChange
+      setAutoCycle: handleAutoCycleChange,
+      cycleInterval,
+      setCycleInterval
     }}>
       {children}
     </ThemeContext.Provider>

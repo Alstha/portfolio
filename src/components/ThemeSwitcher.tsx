@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useTheme } from '@/contexts/ThemeContext'
 
 const themes = [
   {
@@ -52,14 +53,12 @@ const themes = [
 
 export default function ThemeSwitcher() {
   const [isOpen, setIsOpen] = useState(false)
-  const [currentTheme, setCurrentTheme] = useState('default')
-  const [autoCycle, setAutoCycle] = useState(true)
+  const { currentTheme, autoCycle, setAutoCycle, cycleInterval, setCycleInterval } = useTheme()
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
   // Load theme and autoCycle preference from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'default'
-    setCurrentTheme(savedTheme)
     document.documentElement.setAttribute('data-theme', savedTheme)
     const savedAuto = localStorage.getItem('autoCycle')
     setAutoCycle(savedAuto === null ? true : savedAuto === 'true')
@@ -73,7 +72,7 @@ export default function ThemeSwitcher() {
   useEffect(() => {
     if (!autoCycle) return
     intervalRef.current = setInterval(() => {
-      setCurrentTheme(prev => {
+      setCycleInterval(prev => {
         const idx = themes.findIndex(t => t.id === prev)
         const nextIdx = (idx + 1) % themes.length
         const nextTheme = themes[nextIdx].id
@@ -88,7 +87,6 @@ export default function ThemeSwitcher() {
   }, [autoCycle])
 
   const changeTheme = (themeId: string) => {
-    setCurrentTheme(themeId)
     document.documentElement.setAttribute('data-theme', themeId)
     localStorage.setItem('theme', themeId)
     setIsOpen(false)
@@ -112,6 +110,24 @@ export default function ThemeSwitcher() {
           )}
         </button>
         <span className="text-premium-300 text-xs font-medium select-none">Auto Theme: {autoCycle ? 'On' : 'Off'}</span>
+      </div>
+
+      {/* Admin interval control */}
+      <div className="fixed bottom-40 right-6 z-50 flex items-center gap-2">
+        <input
+          type="number"
+          min={3}
+          max={60}
+          value={cycleInterval}
+          onChange={e => {
+            const val = Math.max(3, Math.min(60, Number(e.target.value)))
+            setCycleInterval(val)
+            localStorage.setItem('themeCycleInterval', val.toString())
+          }}
+          className="w-16 px-2 py-1 rounded bg-premium-900 border border-premium-600 text-white text-xs text-center"
+          aria-label="Theme cycle interval (seconds)"
+        />
+        <span className="text-premium-300 text-xs font-medium select-none">sec/auto</span>
       </div>
 
       {/* Theme Switcher Button */}
