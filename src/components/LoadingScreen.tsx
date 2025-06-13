@@ -2,7 +2,16 @@
 
 import { useEffect, useState } from 'react'
 
+const TAGLINES = [
+  'Crafting AI Experiences',
+  'Building with Passion',
+  'Innovating for Tomorrow',
+  'Minimal. Modern. Magic.',
+  "Let's Create the Future",
+]
+
 export default function LoadingScreen() {
+  const [taglineIndex, setTaglineIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [progress, setProgress] = useState(0)
   const [mounted, setMounted] = useState(false)
@@ -26,9 +35,14 @@ export default function LoadingScreen() {
       setIsLoading(false)
     }, 2500)
 
+    const taglineInterval = setInterval(() => {
+      setTaglineIndex((i) => (i + 1) % TAGLINES.length)
+    }, 2000)
+
     return () => {
       clearInterval(interval)
       clearTimeout(timer)
+      clearInterval(taglineInterval)
     }
   }, [])
 
@@ -60,65 +74,37 @@ export default function LoadingScreen() {
 
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-br from-premium-900 via-premium-800 to-premium-900 flex items-center justify-center overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-accent-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent-secondary/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse delay-500"></div>
+      {/* Animated Blurred Blobs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-accent-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent-secondary/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      {/* Loading Content */}
-      <div className="relative z-10 text-center max-w-md mx-auto px-6">
-        {/* Logo */}
-        <div className="mb-8">
-          <div className="w-20 h-20 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce">
-            <span className="text-white text-3xl font-bold">A</span>
+      {/* Centered Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center gap-6 px-6 py-12 animate-fade-in">
+        {/* Animated Gradient Ring Logo */}
+        <div className="relative mb-4">
+          <div className="w-24 h-24 flex items-center justify-center">
+            <span className="absolute inset-0 rounded-full bg-gradient-to-tr from-accent-500 via-accent-secondary to-purple-500 animate-spin-slow blur-sm opacity-60"></span>
+            <span className="relative w-20 h-20 bg-premium-900 rounded-full flex items-center justify-center shadow-xl">
+              <span className="text-white text-4xl font-bold select-none">A</span>
+            </span>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2 animate-fade-in whitespace-nowrap">
-            Alson Shrestha
-          </h1>
-          <p className="text-white text-sm animate-fade-in delay-300">
-            AI/ML Enthusiast & Tech Startup Founder
-          </p>
         </div>
-
-        {/* Loading Animation */}
-        <div className="mb-8">
-          <div className="flex justify-center space-x-2 mb-4">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="w-3 h-3 bg-gradient-accent rounded-full animate-bounce"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              ></div>
-            ))}
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="w-full bg-premium-800/30 rounded-full h-2 mb-4 overflow-hidden">
-            <div 
-              className="h-full bg-gradient-accent rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-          
-          <p className="text-white text-sm">
-            Loading amazing content... {Math.round(progress)}%
-          </p>
-        </div>
-
-        {/* Loading Text */}
-        <div className="space-y-2 text-white text-sm">
-          <p className="animate-fade-in delay-500">🚀 Preparing AI/ML showcase...</p>
-          <p className="animate-fade-in delay-700">💡 Loading innovative projects...</p>
-          <p className="animate-fade-in delay-900">🌟 Setting up premium experience...</p>
-        </div>
-
-        {/* Namaste Greeting */}
-        <div className="mt-8 animate-fade-in delay-1100">
-          <span className="inline-block px-6 py-3 glass rounded-full text-accent-300 font-medium border border-accent-500/20">
-            Namaste! 🙏
-          </span>
+        {/* Name */}
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-1 tracking-tight whitespace-nowrap animate-fade-in">
+          Alson Shrestha
+        </h1>
+        {/* Rotating Tagline */}
+        <p className="text-premium-300 text-sm md:text-base min-h-[1.5em] transition-all duration-500 animate-fade-in">
+          {TAGLINES[taglineIndex]}
+        </p>
+        {/* Animated Bouncing Dots */}
+        <div className="flex space-x-2 mt-4" aria-label="Loading">
+          <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0s' }}></span>
+          <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
+          <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
         </div>
       </div>
 
@@ -141,4 +127,7 @@ export default function LoadingScreen() {
       )}
     </div>
   )
-} 
+}
+
+// Add this to your global CSS if not present:
+// .animate-spin-slow { animation: spin 2.5s linear infinite; } 
