@@ -1,32 +1,31 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getCurrentUser } from '@/lib/auth'
+
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    // Count total contacts
-    const count = await prisma.contact.count()
-    
-    // Get all contacts
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'insider') {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     const contacts = await prisma.contact.findMany({
       orderBy: {
         createdAt: 'desc',
       },
     })
 
-    return NextResponse.json({
-      count,
-      contacts,
-      message: `Found ${count} contacts in database`
-    })
+    return NextResponse.json(contacts)
   } catch (error) {
-    console.error('Debug contacts error:', error)
+    console.error('Error fetching debug contacts:', error)
     return NextResponse.json(
-      { 
-        error: 'Database error', 
-        details: error instanceof Error ? error.message : 'Unknown error',
-        count: 0,
-        contacts: []
-      },
+      { error: 'Failed to fetch contacts' },
       { status: 500 }
     )
   }
