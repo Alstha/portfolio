@@ -15,9 +15,16 @@ const CAPTIONS = [
   'Unleashing potential... 🌟',
 ]
 
+const CIRCLE_SIZE = 96
+const STROKE_WIDTH = 8
+const RADIUS = (CIRCLE_SIZE - STROKE_WIDTH) / 2
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+
 export default function LoadingScreen() {
   const [progress, setProgress] = useState(0)
   const [caption, setCaption] = useState(CAPTIONS[0])
+  const [visible, setVisible] = useState(true)
+  const [fade, setFade] = useState(false)
 
   useEffect(() => {
     // Pick a random caption on mount
@@ -29,14 +36,20 @@ export default function LoadingScreen() {
       if (current >= 100) {
         current = 100
         clearInterval(interval)
+        setTimeout(() => setFade(true), 400) // Start fade out
+        setTimeout(() => setVisible(false), 1100) // Unmount after fade
       }
       setProgress(current)
     }, 40)
     return () => clearInterval(interval)
   }, [])
 
+  if (!visible) return null
+
+  const progressOffset = CIRCUMFERENCE * (1 - progress / 100)
+
   return (
-    <div className="fixed inset-0 z-50 bg-gradient-to-br from-premium-900 via-premium-800 to-premium-900 flex items-center justify-center overflow-hidden">
+    <div className={`fixed inset-0 z-50 bg-gradient-to-br from-premium-900 via-premium-800 to-premium-900 flex items-center justify-center overflow-hidden transition-opacity duration-700 ${fade ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
       {/* Animated Blurred Blobs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-accent-500/20 rounded-full blur-3xl animate-pulse"></div>
@@ -64,17 +77,47 @@ export default function LoadingScreen() {
           <span className="animate-wiggle inline-block">{caption.split(' ').pop()}</span>
           <span>{caption.replace(/\s*\S+$/, '')}</span>
         </p>
-        {/* Animated Percentage */}
-        <div className="flex flex-col items-center mt-2">
-          <span className="text-white text-3xl font-mono font-bold tracking-widest animate-fade-in">
-            {progress}%
-          </span>
-          <div className="w-32 h-2 bg-premium-800/30 rounded-full overflow-hidden mt-2">
-            <div 
-              className="h-full bg-gradient-accent rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
+        {/* Circular Progress Indicator */}
+        <div className="relative flex items-center justify-center mt-2">
+          <svg width={CIRCLE_SIZE} height={CIRCLE_SIZE} className="block">
+            <circle
+              cx={CIRCLE_SIZE / 2}
+              cy={CIRCLE_SIZE / 2}
+              r={RADIUS}
+              stroke="#22223b"
+              strokeWidth={STROKE_WIDTH}
+              fill="none"
+            />
+            <circle
+              cx={CIRCLE_SIZE / 2}
+              cy={CIRCLE_SIZE / 2}
+              r={RADIUS}
+              stroke="url(#gradient)"
+              strokeWidth={STROKE_WIDTH}
+              fill="none"
+              strokeDasharray={CIRCUMFERENCE}
+              strokeDashoffset={progressOffset}
+              strokeLinecap="round"
+              style={{ transition: 'stroke-dashoffset 0.5s cubic-bezier(.4,1.7,.7,1)' }}
+            />
+            <defs>
+              <linearGradient id="gradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#7c3aed" />
+                <stop offset="50%" stopColor="#06b6d4" />
+                <stop offset="100%" stopColor="#a21caf" />
+              </linearGradient>
+            </defs>
+            <text
+              x="50%"
+              y="50%"
+              textAnchor="middle"
+              dominantBaseline="central"
+              className="fill-white font-mono text-xl"
+              style={{ fontSize: 28 }}
+            >
+              {progress}%
+            </text>
+          </svg>
         </div>
       </div>
     </div>
