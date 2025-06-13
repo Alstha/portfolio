@@ -51,7 +51,7 @@ export default function About() {
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-20">
-          <h2 className="text-5xl md:text-7xl font-bold text-premium-50 mb-6 hover-scale">
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 hover-scale">
             About <span className="gradient-text hover-scale">Me</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-accent mx-auto rounded-full hover-glow"></div>
@@ -92,7 +92,7 @@ export default function About() {
                         {card.icon}
                       </div>
                       <h3 className={`
-                        text-sm font-medium text-premium-300 transition-all duration-500
+                        text-sm font-medium text-white transition-all duration-500
                         ${activeCard === index ? 'text-premium-50 font-semibold' : ''}
                       `}>
                         {card.title}
@@ -163,10 +163,10 @@ export default function About() {
                 </div>
 
                 {/* Name and Title */}
-                <h3 className="text-3xl font-bold text-premium-50 mb-2 hover-scale">
+                <h3 className="text-3xl font-bold text-white mb-2 hover-scale">
                   Alson Shrestha
                 </h3>
-                <p className="text-premium-400 mb-6 hover-bright">
+                <p className="text-white mb-6 hover-bright">
                   {cards[activeCard].title}
                 </p>
 
@@ -174,15 +174,15 @@ export default function About() {
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-accent-400 mb-1">18</div>
-                    <div className="text-xs text-premium-400">Age</div>
+                    <div className="text-xs text-white">Age</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-accent-400 mb-1">12+</div>
-                    <div className="text-xs text-premium-400">Projects</div>
+                    <div className="text-xs text-white">Projects</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-accent-400 mb-1">∞</div>
-                    <div className="text-xs text-premium-400">Potential</div>
+                    <div className="text-xs text-white">Potential</div>
                   </div>
                 </div>
 
@@ -197,7 +197,7 @@ export default function About() {
                 {/* Current Status */}
                 <div className="inline-flex items-center space-x-2 px-4 py-2 bg-premium-800/50 rounded-full">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-premium-300 text-sm">Currently Active</span>
+                  <span className="text-white text-sm">Currently Active</span>
                 </div>
               </div>
             </div>
@@ -208,7 +208,7 @@ export default function About() {
         <div className="text-center mt-16">
           <div className="inline-flex items-center space-x-4 px-8 py-4 glass rounded-full border border-premium-600/20">
             <span className="text-2xl">🌟</span>
-            <span className="text-premium-300 font-medium">Building the Future with AI</span>
+            <span className="text-white font-medium">Building the Future with AI</span>
             <span className="text-2xl">🚀</span>
           </div>
         </div>

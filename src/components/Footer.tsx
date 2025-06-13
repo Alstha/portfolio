@@ -11,32 +11,32 @@ export default function Footer() {
               <div className="w-12 h-12 bg-gradient-accent rounded-lg flex items-center justify-center mr-3">
                 <span className="text-white text-xl font-bold">A</span>
               </div>
-              <span className="text-2xl font-bold text-premium-50">Alstha</span>
+              <span className="text-2xl font-bold text-white">Alstha</span>
             </div>
-            <p className="text-premium-300 text-sm leading-relaxed">
+            <p className="text-white text-sm leading-relaxed">
               AI/ML enthusiast and tech startup founder from Nepal, focused on innovation and positive impact.
             </p>
           </div>
 
           {/* Quick Links */}
           <div className="text-center">
-            <h3 className="text-premium-50 font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <div className="space-y-2">
               <a 
                 href="#about" 
-                className="block text-premium-300 hover:text-accent-300 transition-colors text-sm"
+                className="block text-white hover:text-accent-300 transition-colors text-sm"
               >
                 About
               </a>
               <a 
                 href="#projects" 
-                className="block text-premium-300 hover:text-accent-300 transition-colors text-sm"
+                className="block text-white hover:text-accent-300 transition-colors text-sm"
               >
                 Projects
               </a>
               <a 
                 href="#contact" 
-                className="block text-premium-300 hover:text-accent-300 transition-colors text-sm"
+                className="block text-white hover:text-accent-300 transition-colors text-sm"
               >
                 Contact
               </a>
@@ -45,18 +45,18 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div className="text-center md:text-right">
-            <h3 className="text-premium-50 font-semibold mb-4">Connect</h3>
+            <h3 className="text-white font-semibold mb-4">Connect</h3>
             <div className="space-y-2 text-sm">
-              <p className="text-premium-300">📍 Kathmandu, Nepal</p>
-              <p className="text-premium-300">🎓 Islington College</p>
-              <p className="text-premium-300">🚀 AI/ML & Innovation</p>
+              <p className="text-white">📍 Kathmandu, Nepal</p>
+              <p className="text-white">🎓 Islington College</p>
+              <p className="text-white">🚀 AI/ML & Innovation</p>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-premium-600/20 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-premium-400 text-sm mb-4 md:mb-0">
+          <p className="text-white text-sm mb-4 md:mb-0">
             © 2025 Alson Shrestha. All rights reserved.
           </p>
           <div className="flex space-x-6">
@@ -64,7 +64,7 @@ export default function Footer() {
               href="https://github.com/Alstha" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-premium-400 hover:text-accent-300 transition-colors"
+              className="text-white hover:text-accent-300 transition-colors"
             >
               GitHub
             </a>
@@ -72,13 +72,13 @@ export default function Footer() {
               href="https://www.linkedin.com/in/alson-shrestha-46803b346/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-premium-400 hover:text-accent-300 transition-colors"
+              className="text-white hover:text-accent-300 transition-colors"
             >
               LinkedIn
             </a>
             <a 
               href="mailto:alsthadotcom@gmail.com"
-              className="text-premium-400 hover:text-accent-300 transition-colors"
+              className="text-white hover:text-accent-300 transition-colors"
             >
               Email
             </a>

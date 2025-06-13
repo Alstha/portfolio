@@ -58,7 +58,7 @@ export default function Contact() {
             <span className="text-accent-400 font-medium tracking-wider text-sm">CONTACT</span>
             <div className="w-8 h-0.5 bg-gradient-accent rounded-full"></div>
           </div>
-          <h2 className="text-5xl md:text-7xl font-bold text-premium-50 mb-6 leading-tight">
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
             Get in <span className="gradient-text hover-scale">Touch</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-accent mx-auto rounded-full hover-glow mb-6"></div>
@@ -68,8 +68,8 @@ export default function Contact() {
           {/* Contact Info - Compact Cards */}
           <div className="lg:col-span-1 space-y-4">
             <div className="glass rounded-2xl p-6 border border-premium-600/20 card-hover group">
-              <h3 className="text-xl font-bold text-premium-50 mb-3 hover-scale">Let&apos;s Connect</h3>
-              <p className="text-premium-300 text-sm leading-relaxed hover-bright">
+              <h3 className="text-xl font-bold text-white mb-3 hover-scale">Let&apos;s Connect</h3>
+              <p className="text-white text-sm leading-relaxed hover-bright">
                 I&apos;m always excited to discuss AI/ML projects, collaborations, or just chat about technology and innovation.
               </p>
             </div>
@@ -80,8 +80,8 @@ export default function Contact() {
                   <span className="text-white text-sm">📍</span>
                 </div>
                 <div>
-                  <h4 className="text-premium-50 font-semibold text-sm hover-scale">Location</h4>
-                  <p className="text-premium-300 text-sm hover-bright">Kathmandu, Nepal</p>
+                  <h4 className="text-white font-semibold text-sm hover-scale">Location</h4>
+                  <p className="text-white text-sm hover-bright">Kathmandu, Nepal</p>
                 </div>
               </div>
             </div>
@@ -93,8 +93,8 @@ export default function Contact() {
                   <span className="text-white text-sm">📧</span>
                 </div>
                 <div>
-                  <h4 className="text-premium-50 font-semibold text-sm hover-scale">Email</h4>
-                  <p className="text-premium-300 text-sm hover-bright group-hover:text-accent-400 transition-colors">alsthadotcom@gmail.com</p>
+                  <h4 className="text-white font-semibold text-sm hover-scale">Email</h4>
+                  <p className="text-white text-sm hover-bright group-hover:text-accent-400 transition-colors">alsthadotcom@gmail.com</p>
                 </div>
               </div>
             </div>
@@ -106,8 +106,8 @@ export default function Contact() {
                   <span className="text-white text-sm">📱</span>
                 </div>
                 <div>
-                  <h4 className="text-premium-50 font-semibold text-sm hover-scale">Phone</h4>
-                  <p className="text-premium-300 text-sm hover-bright group-hover:text-accent-400 transition-colors">+977-9761856566</p>
+                  <h4 className="text-white font-semibold text-sm hover-scale">Phone</h4>
+                  <p className="text-white text-sm hover-bright group-hover:text-accent-400 transition-colors">+977-9761856566</p>
                 </div>
               </div>
             </div>
@@ -118,8 +118,8 @@ export default function Contact() {
                   <span className="text-white text-sm">🎓</span>
                 </div>
                 <div>
-                  <h4 className="text-premium-50 font-semibold text-sm hover-scale">Education</h4>
-                  <p className="text-premium-300 text-sm hover-bright">Islington College</p>
+                  <h4 className="text-white font-semibold text-sm hover-scale">Education</h4>
+                  <p className="text-white text-sm hover-bright">Islington College</p>
                 </div>
               </div>
             </div>
@@ -131,7 +131,7 @@ export default function Contact() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="group">
-                    <label htmlFor="name" className="block text-premium-50 font-semibold mb-3 group-hover:text-accent-400 transition-colors">
+                    <label htmlFor="name" className="block text-white font-semibold mb-3 group-hover:text-accent-400 transition-colors">
                       Name
                     </label>
                     <input
@@ -141,13 +141,13 @@ export default function Contact() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-premium-50 placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500"
+                      className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500"
                       placeholder="Your name"
                     />
                   </div>
 
                   <div className="group">
-                    <label htmlFor="email" className="block text-premium-50 font-semibold mb-3 group-hover:text-accent-400 transition-colors">
+                    <label htmlFor="email" className="block text-white font-semibold mb-3 group-hover:text-accent-400 transition-colors">
                       Email
                     </label>
                     <input
@@ -157,14 +157,14 @@ export default function Contact() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-premium-50 placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500"
+                      className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500"
                       placeholder="your.email@example.com"
                     />
                   </div>
                 </div>
 
                 <div className="group">
-                  <label htmlFor="message" className="block text-premium-50 font-semibold mb-3 group-hover:text-accent-400 transition-colors">
+                  <label htmlFor="message" className="block text-white font-semibold mb-3 group-hover:text-accent-400 transition-colors">
                     Message
                   </label>
                   <textarea
@@ -174,7 +174,7 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-premium-50 placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500 resize-none"
+                    className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500 resize-none"
                     placeholder="Tell me about your project or just say hello!"
                   />
                 </div>

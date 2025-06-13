@@ -65,10 +65,10 @@ export default function Projects() {
     <section className="py-20 relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-secondary)] bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold mb-4 text-white">
             Featured Projects
           </h2>
-          <p className="text-[var(--text-secondary)] max-w-2xl mx-auto">
+          <p className="text-white max-w-2xl mx-auto">
             Explore my recent work and personal projects
           </p>
         </div>
