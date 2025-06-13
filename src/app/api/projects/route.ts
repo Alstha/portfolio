@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { title, description, image, githubUrl, liveUrl, technologies, featured, category, year, details } = body
+    const { title, description, image, githubUrl, liveUrl, technologies, featured, category, year, details, userId } = body
 
     // Validate required fields
     if (!title || !description || !technologies) {
@@ -58,24 +58,24 @@ export async function POST(request: NextRequest) {
         ? technologies 
         : JSON.stringify([])
 
+    const data: any = {
+      title,
+      description,
+      image,
+      githubUrl,
+      liveUrl,
+      technologies: technologiesString,
+      featured: featured || false,
+      category,
+      year,
+      details
+    }
+    if (userId) {
+      data.user = { connect: { id: userId } }
+    }
+
     const project = await prisma.project.create({
-      data: {
-        title,
-        description,
-        image,
-        githubUrl,
-        liveUrl,
-        technologies: technologiesString,
-        featured: featured || false,
-        category,
-        year,
-        details,
-        user: {
-          connect: {
-            id: user.id
-          }
-        }
-      },
+      data,
       include: {
         user: {
           select: {

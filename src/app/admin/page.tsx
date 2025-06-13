@@ -69,7 +69,8 @@ export default function AdminPanel() {
     githubUrl: '',
     liveUrl: '',
     tech: '',
-    featured: false
+    featured: false,
+    userId: ''
   })
   const [showAddUser, setShowAddUser] = useState(false)
   const [newUser, setNewUser] = useState({
@@ -631,27 +632,27 @@ export default function AdminPanel() {
   const renderProjectManagement = () => {
     const handleAddProject = async () => {
       try {
+        const body = {
+          title: newProject.title,
+          description: newProject.description,
+          image: newProject.image,
+          githubUrl: newProject.githubUrl,
+          liveUrl: newProject.liveUrl,
+          technologies: newProject.tech.split(',').map(t => t.trim()),
+          featured: newProject.featured
+        }
+        if (newProject.userId) body.userId = newProject.userId
         const response = await fetch('/api/projects', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            title: newProject.title,
-            description: newProject.description,
-            image: newProject.image,
-            githubUrl: newProject.githubUrl,
-            liveUrl: newProject.liveUrl,
-            technologies: newProject.tech.split(',').map(t => t.trim()),
-            featured: newProject.featured
-          }),
+          body: JSON.stringify(body),
         })
-
         if (!response.ok) {
           const error = await response.json()
           throw new Error(error.error || 'Failed to add project')
         }
-
         setShowAddProject(false)
         setNewProject({
           title: '',
@@ -660,7 +661,8 @@ export default function AdminPanel() {
           githubUrl: '',
           liveUrl: '',
           tech: '',
-          featured: false
+          featured: false,
+          userId: users[0]?.id || ''
         })
         fetchProjects()
       } catch (error) {
@@ -741,6 +743,17 @@ export default function AdminPanel() {
                   onChange={(e) => setNewProject({ ...newProject, tech: e.target.value })}
                   className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                <select
+                  value={newProject.userId}
+                  onChange={e => setNewProject({ ...newProject, userId: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-700/50 border border-slate-600/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={users.length === 0}
+                >
+                  <option value="">{users.length === 0 ? 'No users available' : 'Select a user'}</option>
+                  {users.map(u => (
+                    <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
+                  ))}
+                </select>
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -760,6 +773,7 @@ export default function AdminPanel() {
                   <button
                     onClick={handleAddProject}
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    disabled={users.length === 0}
                   >
                     Add Project
                   </button>
