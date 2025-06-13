@@ -1,28 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db'
 import { getCurrentUser } from '@/lib/auth'
 
-type RouteSegment = {
-  params: Promise<{ id: string }>
-}
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: NextRequest,
-  segment: RouteSegment
-): Promise<NextResponse> {
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = await segment.params
     const user = await getCurrentUser()
     if (!user || user.role !== 'insider') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
 
     const contact = await prisma.contact.findUnique({
-      where: { id }
+      where: { id: params.id },
     })
 
     if (!contact) {
-      return NextResponse.json({ error: 'Contact not found' }, { status: 404 })
+      return NextResponse.json(
+        { error: 'Contact not found' },
+        { status: 404 }
+      )
     }
 
     return NextResponse.json(contact)
@@ -37,13 +41,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  segment: RouteSegment
-): Promise<NextResponse> {
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = await segment.params
     const user = await getCurrentUser()
     if (!user || user.role !== 'insider') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
 
     const body = await request.json()
@@ -56,12 +62,12 @@ export async function PUT(
       )
     }
 
-    const updatedContact = await prisma.contact.update({
-      where: { id },
-      data: { name, email, message }
+    const contact = await prisma.contact.update({
+      where: { id: params.id },
+      data: { name, email, message },
     })
 
-    return NextResponse.json(updatedContact)
+    return NextResponse.json(contact)
   } catch (error) {
     console.error('Error updating contact:', error)
     return NextResponse.json(
@@ -73,20 +79,25 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  segment: RouteSegment
-): Promise<NextResponse> {
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = await segment.params
     const user = await getCurrentUser()
     if (!user || user.role !== 'insider') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
 
     await prisma.contact.delete({
-      where: { id }
+      where: { id: params.id },
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json(
+      { message: 'Contact deleted successfully' },
+      { status: 200 }
+    )
   } catch (error) {
     console.error('Error deleting contact:', error)
     return NextResponse.json(
