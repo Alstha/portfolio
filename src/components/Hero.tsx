@@ -125,7 +125,7 @@ export default function Hero() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-xl md:text-2xl text-white mb-12 leading-relaxed animate-slide-up hover-bright">
+        <p className="text-xs md:text-2xl text-white mb-12 leading-relaxed animate-slide-up hover-bright whitespace-nowrap">
           AI/ML enthusiast & tech startup founder from Nepal
         </p>
 
