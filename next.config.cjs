@@ -1,14 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    esmExternals: true
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ibb.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'web.whatsapp.com',
+      },
+    ],
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-}
+  /* config options here */
+};
 
-module.exports = nextConfig;
+module.exports = nextConfig; 
