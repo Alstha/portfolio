@@ -163,7 +163,7 @@ export default function About({ projectCount }: { projectCount?: number }) {
                 </div>
 
                 {/* Name and Title */}
-                <h3 className="text-3xl font-bold text-white mb-2 hover-scale">
+                <h3 className="text-3xl font-bold text-white mb-2 hover-scale whitespace-nowrap">
                   Alson Shrestha
                 </h3>
                 <p className="text-white mb-6 hover-bright">

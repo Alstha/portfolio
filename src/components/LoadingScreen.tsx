@@ -74,7 +74,7 @@ export default function LoadingScreen() {
           <div className="w-20 h-20 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce">
             <span className="text-white text-3xl font-bold">A</span>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2 animate-fade-in">
+          <h1 className="text-3xl font-bold text-white mb-2 animate-fade-in whitespace-nowrap">
             Alson Shrestha
           </h1>
           <p className="text-white text-sm animate-fade-in delay-300">

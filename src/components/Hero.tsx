@@ -119,7 +119,7 @@ export default function Hero() {
         {/* Main Heading */}
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight animate-slide-up">
           Hi, I&apos;m{' '}
-          <span className="gradient-text hover-scale name-effect cursor-pointer">
+          <span className="gradient-text hover-scale name-effect cursor-pointer whitespace-nowrap">
             Alson Shrestha
           </span>
         </h1>
