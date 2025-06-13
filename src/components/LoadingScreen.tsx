@@ -2,75 +2,38 @@
 
 import { useEffect, useState } from 'react'
 
-const TAGLINES = [
-  'Crafting AI Experiences',
-  'Building with Passion',
-  'Innovating for Tomorrow',
-  'Minimal. Modern. Magic.',
-  "Let's Create the Future",
+const CAPTIONS = [
+  'Summoning AI magic... 🤖✨',
+  'Sharpening pixels... 🖌️',
+  'Waking up neurons... 🧠',
+  'Brewing innovation... ☕',
+  'Loading awesomeness... 🚀',
+  'Tuning the matrix... 🧬',
+  'Polishing gradients... 🎨',
+  'Charging creativity... ⚡',
+  'Syncing with the cloud... ☁️',
+  'Unleashing potential... 🌟',
 ]
 
 export default function LoadingScreen() {
-  const [taglineIndex, setTaglineIndex] = useState(0)
-  const [isLoading, setIsLoading] = useState(true)
   const [progress, setProgress] = useState(0)
-  const [mounted, setMounted] = useState(false)
+  const [caption, setCaption] = useState(CAPTIONS[0])
 
   useEffect(() => {
-    setMounted(true)
-    
-    // Simulate loading progress
+    // Pick a random caption on mount
+    setCaption(CAPTIONS[Math.floor(Math.random() * CAPTIONS.length)])
+    // Animate progress
+    let current = 0
     const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          return 100
-        }
-        return prev + Math.random() * 15
-      })
-    }, 100)
-
-    // Hide loading screen after content is ready
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 2500)
-
-    const taglineInterval = setInterval(() => {
-      setTaglineIndex((i) => (i + 1) % TAGLINES.length)
-    }, 2000)
-
-    return () => {
-      clearInterval(interval)
-      clearTimeout(timer)
-      clearInterval(taglineInterval)
-    }
+      current += Math.floor(Math.random() * 7) + 2 // random step for fun
+      if (current >= 100) {
+        current = 100
+        clearInterval(interval)
+      }
+      setProgress(current)
+    }, 40)
+    return () => clearInterval(interval)
   }, [])
-
-  if (!isLoading) return null
-
-  // Predefined particle positions and animations to avoid hydration mismatch
-  const particles = [
-    { left: '10%', top: '20%', delay: '0.5s', duration: '3.2s' },
-    { left: '25%', top: '80%', delay: '1.2s', duration: '3.8s' },
-    { left: '40%', top: '30%', delay: '0.8s', duration: '4.1s' },
-    { left: '55%', top: '70%', delay: '1.5s', duration: '3.5s' },
-    { left: '70%', top: '15%', delay: '0.3s', duration: '3.9s' },
-    { left: '85%', top: '60%', delay: '1.8s', duration: '3.3s' },
-    { left: '15%', top: '45%', delay: '0.7s', duration: '4.2s' },
-    { left: '30%', top: '90%', delay: '1.1s', duration: '3.6s' },
-    { left: '45%', top: '10%', delay: '0.9s', duration: '3.7s' },
-    { left: '60%', top: '85%', delay: '1.4s', duration: '3.4s' },
-    { left: '75%', top: '35%', delay: '0.6s', duration: '4.0s' },
-    { left: '90%', top: '75%', delay: '1.7s', duration: '3.1s' },
-    { left: '5%', top: '55%', delay: '1.0s', duration: '3.8s' },
-    { left: '20%', top: '25%', delay: '0.4s', duration: '4.3s' },
-    { left: '35%', top: '95%', delay: '1.3s', duration: '3.2s' },
-    { left: '50%', top: '5%', delay: '0.2s', duration: '3.9s' },
-    { left: '65%', top: '50%', delay: '1.6s', duration: '3.5s' },
-    { left: '80%', top: '40%', delay: '0.1s', duration: '4.1s' },
-    { left: '95%', top: '65%', delay: '1.9s', duration: '3.3s' },
-    { left: '12%', top: '35%', delay: '0.8s', duration: '3.7s' }
-  ]
 
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-br from-premium-900 via-premium-800 to-premium-900 flex items-center justify-center overflow-hidden">
@@ -96,38 +59,29 @@ export default function LoadingScreen() {
         <h1 className="text-2xl md:text-3xl font-bold text-white mb-1 tracking-tight whitespace-nowrap animate-fade-in">
           Alson Shrestha
         </h1>
-        {/* Rotating Tagline */}
-        <p className="text-premium-300 text-sm md:text-base min-h-[1.5em] transition-all duration-500 animate-fade-in">
-          {TAGLINES[taglineIndex]}
+        {/* Fun Caption */}
+        <p className="text-premium-300 text-base min-h-[1.5em] transition-all duration-500 animate-fade-in flex items-center gap-2">
+          <span className="animate-wiggle inline-block">{caption.split(' ').pop()}</span>
+          <span>{caption.replace(/\s*\S+$/, '')}</span>
         </p>
-        {/* Animated Bouncing Dots */}
-        <div className="flex space-x-2 mt-4" aria-label="Loading">
-          <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0s' }}></span>
-          <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
-          <span className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
+        {/* Animated Percentage */}
+        <div className="flex flex-col items-center mt-2">
+          <span className="text-white text-3xl font-mono font-bold tracking-widest animate-fade-in">
+            {progress}%
+          </span>
+          <div className="w-32 h-2 bg-premium-800/30 rounded-full overflow-hidden mt-2">
+            <div 
+              className="h-full bg-gradient-accent rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
         </div>
       </div>
-
-      {/* Floating Particles - Only render on client to avoid hydration mismatch */}
-      {mounted && (
-        <div className="absolute inset-0 pointer-events-none">
-          {particles.map((particle, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-accent-400/30 rounded-full animate-float"
-              style={{
-                left: particle.left,
-                top: particle.top,
-                animationDelay: particle.delay,
-                animationDuration: particle.duration
-              }}
-            ></div>
-          ))}
-        </div>
-      )}
     </div>
   )
 }
 
 // Add this to your global CSS if not present:
-// .animate-spin-slow { animation: spin 2.5s linear infinite; } 
+// .animate-spin-slow { animation: spin 2.5s linear infinite; }
+// .animate-wiggle { animation: wiggle 1.2s infinite alternate; }
+// @keyframes wiggle { 0% { transform: rotate(-8deg); } 100% { transform: rotate(8deg); } } 
