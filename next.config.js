@@ -1,7 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['web.whatsapp.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ibb.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'web.whatsapp.com',
+      },
+    ],
   },
   /* config options here */
 };
