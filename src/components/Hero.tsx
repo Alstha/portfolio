@@ -111,13 +111,13 @@ export default function Hero() {
       <div className="relative z-10 text-center max-w-4xl mx-auto animate-fade-in">
         {/* Greeting */}
         <div className="mb-8 animate-slide-up">
-          <span className="inline-block px-6 py-3 glass rounded-full text-accent-300 font-medium border border-accent-500/20 hover-scale hover-glow">
+          <span className="inline-block px-6 py-3 glass rounded-full text-white font-medium border border-accent-500/20 hover-scale hover-glow">
             Namaste! &apos; 🙏
           </span>
         </div>
 
         {/* Main Heading */}
-        <h1 className="text-5xl md:text-7xl font-bold text-premium-50 mb-6 leading-tight animate-slide-up">
+        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight animate-slide-up">
           Hi, I&apos;m{' '}
           <span className="gradient-text hover-scale name-effect cursor-pointer">
             Alson Shrestha
@@ -125,7 +125,7 @@ export default function Hero() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-xl md:text-2xl text-premium-300 mb-12 leading-relaxed animate-slide-up hover-bright">
+        <p className="text-xl md:text-2xl text-white mb-12 leading-relaxed animate-slide-up hover-bright">
           AI/ML enthusiast & tech startup founder from Nepal
         </p>
 
