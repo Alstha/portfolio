@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getCurrentUser } from '@/lib/auth'
+
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
     const projects = await prisma.project.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         user: {
           select: {
@@ -16,33 +23,30 @@ export async function GET() {
     return NextResponse.json(projects)
   } catch (error) {
     console.error('Error fetching projects:', error)
-    return NextResponse.json({ error: 'Failed to fetch projects' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to fetch projects' },
+      { status: 500 }
+    )
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'insider') {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
-    const { title, description, image, githubUrl, liveUrl, technologies, featured } = body
+    const { title, description, image, githubUrl, liveUrl, technologies, featured, category, year, details } = body
 
     // Validate required fields
     if (!title || !description || !technologies) {
       return NextResponse.json(
         { error: 'Missing required fields: title, description, and technologies are required' },
-        { status: 400 }
-      )
-    }
-
-    // Find the seeded admin user
-    const adminUser = await prisma.user.findFirst({
-      where: {
-        email: 'admin@example.com'
-      }
-    })
-
-    if (!adminUser) {
-      return NextResponse.json(
-        { error: 'No admin user found to associate with the project' },
         { status: 400 }
       )
     }
@@ -63,9 +67,12 @@ export async function POST(request: NextRequest) {
         liveUrl,
         technologies: technologiesString,
         featured: featured || false,
+        category,
+        year,
+        details,
         user: {
           connect: {
-            id: adminUser.id
+            id: user.id
           }
         }
       },
@@ -79,7 +86,7 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    return NextResponse.json(project)
+    return NextResponse.json(project, { status: 201 })
   } catch (error) {
     console.error('Error creating project:', error)
     return NextResponse.json(
@@ -91,11 +98,22 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'insider') {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
     const { id, ...data } = body
 
     if (!id) {
-      return NextResponse.json({ error: 'Project ID is required' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Project ID is required' },
+        { status: 400 }
+      )
     }
 
     const project = await prisma.project.update({
@@ -114,26 +132,46 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json(project)
   } catch (error) {
     console.error('Error updating project:', error)
-    return NextResponse.json({ error: 'Failed to update project' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to update project' },
+      { status: 500 }
+    )
   }
 }
 
 export async function DELETE(request: NextRequest) {
   try {
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'insider') {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     const url = new URL(request.url)
     const id = url.searchParams.get('id')
 
     if (!id) {
-      return NextResponse.json({ error: 'Project ID is required' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Project ID is required' },
+        { status: 400 }
+      )
     }
 
     await prisma.project.delete({
       where: { id }
     })
 
-    return NextResponse.json({ message: 'Project deleted successfully' })
+    return NextResponse.json(
+      { message: 'Project deleted successfully' },
+      { status: 200 }
+    )
   } catch (error) {
     console.error('Error deleting project:', error)
-    return NextResponse.json({ error: 'Failed to delete project' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to delete project' },
+      { status: 500 }
+    )
   }
 } 
