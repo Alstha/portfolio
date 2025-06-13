@@ -639,9 +639,9 @@ export default function AdminPanel() {
           githubUrl: newProject.githubUrl,
           liveUrl: newProject.liveUrl,
           technologies: newProject.tech.split(',').map(t => t.trim()),
-          featured: newProject.featured
+          featured: newProject.featured,
+          userId: newProject.userId
         }
-        if (newProject.userId) body.userId = newProject.userId
         const response = await fetch('/api/projects', {
           method: 'POST',
           headers: {
