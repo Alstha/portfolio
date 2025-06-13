@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { requireAuth } from '@/lib/auth'
+import { getCurrentUser } from '@/lib/auth'
+
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const user = await requireAuth('insider')()
-    if (user instanceof Response) return user
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'insider') {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
 
     const contacts = await prisma.contact.findMany({
       orderBy: {
@@ -15,7 +23,7 @@ export async function GET() {
 
     return NextResponse.json(contacts)
   } catch (error) {
-    console.error('Contact GET error:', error)
+    console.error('Error fetching contacts:', error)
     return NextResponse.json(
       { error: 'Failed to fetch contacts' },
       { status: 500 }
@@ -45,9 +53,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(contact, { status: 201 })
   } catch (error) {
-    console.error('Contact API error:', error);
+    console.error('Error creating contact:', error)
     return NextResponse.json(
-      { error: 'Failed to send message' },
+      { error: 'Failed to create contact' },
       { status: 500 }
     )
   }
