@@ -139,7 +139,7 @@ export default function Hero() {
           </button>
           <button 
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="px-8 py-4 glass border border-premium-600 text-premium-300 font-semibold rounded-lg hover:border-premium-500 hover:text-premium-100 text-lg btn-linger btn-shimmer"
+            className="px-8 py-4 glass border border-premium-600 text-white font-semibold rounded-lg hover:border-premium-500 hover:text-white text-lg btn-linger btn-shimmer"
           >
             Let&apos;s Connect
           </button>
