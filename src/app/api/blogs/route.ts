@@ -8,8 +8,8 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
   try {
     const blogs = await prisma.blog.findMany({
-      where: {
-        published: true,
+      orderBy: {
+        createdAt: 'desc',
       },
       include: {
         user: {
@@ -18,9 +18,6 @@ export async function GET() {
             avatar: true,
           },
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
       },
     })
 
@@ -37,7 +34,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser()
-    if (!user) {
+    if (!user || user.role !== 'insider') {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
@@ -60,8 +57,12 @@ export async function POST(request: NextRequest) {
         content,
         excerpt,
         image,
-        published,
-        userId: user.id,
+        published: published || false,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
       },
       include: {
         user: {
