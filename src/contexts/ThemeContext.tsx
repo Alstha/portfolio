@@ -40,7 +40,74 @@ const themes: Theme[] = [
       borderLight: '#475569'
     }
   },
-  // Add more themes as needed
+  {
+    id: 'ocean',
+    name: 'Ocean Blue',
+    colors: {
+      background: '#0f172a',
+      foreground: '#1e3a8a',
+      primary: '#1e40af',
+      secondary: '#06b6d4',
+      accent: '#0891b2',
+      accentSecondary: '#0ea5e9',
+      textPrimary: '#e0f2fe',
+      textSecondary: '#bae6fd',
+      textMuted: '#7dd3fc',
+      border: '#1e40af',
+      borderLight: '#3b82f6'
+    }
+  },
+  {
+    id: 'emerald',
+    name: 'Emerald Green',
+    colors: {
+      background: '#064e3b',
+      foreground: '#065f46',
+      primary: '#047857',
+      secondary: '#10b981',
+      accent: '#059669',
+      accentSecondary: '#34d399',
+      textPrimary: '#d1fae5',
+      textSecondary: '#a7f3d0',
+      textMuted: '#6ee7b7',
+      border: '#047857',
+      borderLight: '#10b981'
+    }
+  },
+  {
+    id: 'purple',
+    name: 'Purple Royal',
+    colors: {
+      background: '#1e1b4b',
+      foreground: '#312e81',
+      primary: '#4338ca',
+      secondary: '#a855f7',
+      accent: '#9333ea',
+      accentSecondary: '#c084fc',
+      textPrimary: '#e9d5ff',
+      textSecondary: '#d8b4fe',
+      textMuted: '#c084fc',
+      border: '#4338ca',
+      borderLight: '#6366f1'
+    }
+  },
+  {
+    id: 'sunset',
+    name: 'Sunset Orange',
+    colors: {
+      background: '#451a03',
+      foreground: '#7c2d12',
+      primary: '#9a3412',
+      secondary: '#f97316',
+      accent: '#ea580c',
+      accentSecondary: '#fb923c',
+      textPrimary: '#fed7aa',
+      textSecondary: '#fdba74',
+      textMuted: '#fb923c',
+      border: '#9a3412',
+      borderLight: '#f97316'
+    }
+  }
 ]
 
 interface ThemeContextType {
