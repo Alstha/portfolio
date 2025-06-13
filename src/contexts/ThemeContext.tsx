@@ -33,7 +33,7 @@ const themes: Theme[] = [
       secondary: '#6366f1',
       accent: '#8b5cf6',
       accentSecondary: '#d946ef',
-      textPrimary: '#f8fafc',
+      textPrimary: '#ffffff',
       textSecondary: '#e2e8f0',
       textMuted: '#94a3b8',
       border: '#334155',
@@ -50,9 +50,9 @@ const themes: Theme[] = [
       secondary: '#06b6d4',
       accent: '#0891b2',
       accentSecondary: '#0ea5e9',
-      textPrimary: '#e0f2fe',
-      textSecondary: '#bae6fd',
-      textMuted: '#7dd3fc',
+      textPrimary: '#ffffff',
+      textSecondary: '#e0f2fe',
+      textMuted: '#bae6fd',
       border: '#1e40af',
       borderLight: '#3b82f6'
     }
@@ -67,9 +67,9 @@ const themes: Theme[] = [
       secondary: '#10b981',
       accent: '#059669',
       accentSecondary: '#34d399',
-      textPrimary: '#d1fae5',
-      textSecondary: '#a7f3d0',
-      textMuted: '#6ee7b7',
+      textPrimary: '#ffffff',
+      textSecondary: '#d1fae5',
+      textMuted: '#a7f3d0',
       border: '#047857',
       borderLight: '#10b981'
     }
@@ -84,9 +84,9 @@ const themes: Theme[] = [
       secondary: '#a855f7',
       accent: '#9333ea',
       accentSecondary: '#c084fc',
-      textPrimary: '#e9d5ff',
-      textSecondary: '#d8b4fe',
-      textMuted: '#c084fc',
+      textPrimary: '#ffffff',
+      textSecondary: '#e9d5ff',
+      textMuted: '#d8b4fe',
       border: '#4338ca',
       borderLight: '#6366f1'
     }
@@ -101,9 +101,9 @@ const themes: Theme[] = [
       secondary: '#f97316',
       accent: '#ea580c',
       accentSecondary: '#fb923c',
-      textPrimary: '#fed7aa',
-      textSecondary: '#fdba74',
-      textMuted: '#fb923c',
+      textPrimary: '#ffffff',
+      textSecondary: '#fed7aa',
+      textMuted: '#fdba74',
       border: '#9a3412',
       borderLight: '#f97316'
     }
