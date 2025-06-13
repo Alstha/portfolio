@@ -1,32 +1,23 @@
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '../src/lib/db'
 
 async function main() {
-  const user = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
-    update: {},
-    create: {
-      email: 'admin@example.com',
-      password: 'adminpassword', // TODO: Change to a secure hash in production
-      name: 'Admin User',
-      role: 'insider',
-      bio: 'Default admin user',
-      avatar: 'https://example.com/avatar.jpg',
-      github: 'https://github.com/admin',
-      linkedin: 'https://linkedin.com/in/admin',
-      twitter: 'https://twitter.com/admin',
-      website: 'https://example.com'
-    }
-  })
-  console.log('Seeded user:', user)
+  const existing = await prisma.user.findFirst({ where: { email: 'admin@portfolio.com' } })
+  if (!existing) {
+    await prisma.user.create({
+      data: {
+        email: 'admin@portfolio.com',
+        password: 'admin123', // You should hash this in production!
+        name: 'Admin',
+        role: 'insider',
+      }
+    })
+    console.log('Default admin user created.')
+  } else {
+    console.log('Admin user already exists.')
+  }
 }
 
-main()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  }) 
+main().catch(e => {
+  console.error(e)
+  process.exit(1)
+}).finally(() => prisma.$disconnect()) 
