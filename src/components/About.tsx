@@ -166,7 +166,7 @@ export default function About({ projectCount }: { projectCount?: number }) {
                 <h3 className="text-3xl font-bold text-white mb-2 hover-scale whitespace-nowrap">
                   Alson Shrestha
                 </h3>
-                <p className="text-white mb-6 hover-bright">
+                <p className="text-xs text-white mb-6 hover-bright whitespace-nowrap">
                   {cards[activeCard].title}
                 </p>
 
