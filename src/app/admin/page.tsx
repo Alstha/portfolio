@@ -1295,20 +1295,7 @@ export default function AdminPanel() {
           renderFeedbackManagement()
         ) : activeDatabaseTab === 'contacts' ? (
           renderContactsManagement()
-        ) : (
-          <div className="bg-slate-800/30 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-white">
-                {activeDatabaseTab.charAt(0).toUpperCase() + activeDatabaseTab.slice(1)} Management
-              </h2>
-              <div className="text-slate-400">
-                {users.length + projects.length + feedback.length} record{users.length + projects.length + feedback.length !== 1 ? 's' : ''}
-              </div>
-            </div>
-            
-            {renderTable()}
-          </div>
-        )}
+        ) : null}
       </div>
     </div>
   )
