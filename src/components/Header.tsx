@@ -111,8 +111,8 @@ export default function Header() {
                 {/* Small Label Below Dot */}
                 <span className={`text-xs mt-2 transition-all duration-300 ${
                   activeSection === section.id
-                    ? 'text-accent-300 font-medium opacity-100'
-                    : 'text-premium-400 opacity-60 group-hover:opacity-0 group-hover:text-premium-300'
+                    ? 'text-white font-medium opacity-100'
+                    : 'text-white opacity-60 group-hover:opacity-0 group-hover:text-white'
                 }`}>
                   {section.label}
                 </span>
@@ -125,9 +125,9 @@ export default function Header() {
                     
                     {/* Preview Content */}
                     <div className="space-y-2">
-                      <h4 className="text-premium-50 font-semibold text-sm">{preview.title}</h4>
+                      <h4 className="text-white font-semibold text-sm">{preview.title}</h4>
                       <p className="text-accent-300 text-xs font-medium">{preview.subtitle}</p>
-                      <p className="text-premium-300 text-xs leading-relaxed">{preview.content}</p>
+                      <p className="text-white text-xs leading-relaxed">{preview.content}</p>
                     </div>
 
                     {/* Preview Arrow */}
@@ -149,7 +149,7 @@ export default function Header() {
             />
             
             {/* Small Label Below Dot */}
-            <span className="text-xs mt-2 text-premium-400 opacity-60 group-hover:opacity-0 group-hover:text-premium-300 transition-all duration-300">
+            <span className="text-xs mt-2 text-white opacity-60 group-hover:opacity-0 group-hover:text-white transition-all duration-300">
               Sign In
             </span>
 
@@ -161,9 +161,9 @@ export default function Header() {
                 
                 {/* Preview Content */}
                 <div className="space-y-2">
-                  <h4 className="text-premium-50 font-semibold text-sm">Admin Access</h4>
+                  <h4 className="text-white font-semibold text-sm">Admin Access</h4>
                   <p className="text-green-300 text-xs font-medium">Insider Portal</p>
-                  <p className="text-premium-300 text-xs leading-relaxed">Access admin panel, manage content, and control website settings with insider privileges.</p>
+                  <p className="text-white text-xs leading-relaxed">Access admin panel, manage content, and control website settings with insider privileges.</p>
                 </div>
 
                 {/* Preview Arrow */}
@@ -239,7 +239,7 @@ export default function Header() {
                     <button
                       key={section.id}
                       onClick={() => scrollToSection(section.id)}
-                      className="text-left text-lg text-premium-300 hover:text-premium-50 transition-colors py-2 flex items-center space-x-3 hover:scale-105 hover:translate-x-2 transition-all duration-300"
+                      className="text-left text-lg text-white hover:text-white transition-colors py-2 flex items-center space-x-3 hover:scale-105 hover:translate-x-2 transition-all duration-300"
                     >
                       <span className={`w-2 h-2 rounded-full border-2 ${
                         activeSection === section.id ? 'bg-gradient-accent border-accent-400' : 'bg-premium-700 border-premium-500'
@@ -249,7 +249,7 @@ export default function Header() {
                   ))}
                   <button
                     onClick={() => window.location.href = '/signin'}
-                    className="text-left text-lg text-premium-300 hover:text-premium-50 transition-colors py-2 flex items-center space-x-3 hover:scale-105 hover:translate-x-2 transition-all duration-300"
+                    className="text-left text-lg text-white hover:text-white transition-colors py-2 flex items-center space-x-3 hover:scale-105 hover:translate-x-2 transition-all duration-300"
                   >
                     <span className="w-2 h-2 rounded-full bg-premium-700 border-2 border-premium-500"></span>
                     <span>Sign In</span>
