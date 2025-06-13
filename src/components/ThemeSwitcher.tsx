@@ -69,23 +69,6 @@ export default function ThemeSwitcher() {
     localStorage.setItem('autoCycle', autoCycle ? 'true' : 'false')
   }, [autoCycle])
 
-  useEffect(() => {
-    if (!autoCycle) return
-    intervalRef.current = setInterval(() => {
-      setCycleInterval(prev => {
-        const idx = themes.findIndex(t => t.id === prev)
-        const nextIdx = (idx + 1) % themes.length
-        const nextTheme = themes[nextIdx].id
-        document.documentElement.setAttribute('data-theme', nextTheme)
-        localStorage.setItem('theme', nextTheme)
-        return nextTheme
-      })
-    }, 10000)
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
-    }
-  }, [autoCycle])
-
   const changeTheme = (themeId: string) => {
     document.documentElement.setAttribute('data-theme', themeId)
     localStorage.setItem('theme', themeId)
@@ -99,7 +82,7 @@ export default function ThemeSwitcher() {
       {/* Admin Auto-Cycle Toggle */}
       <div className="fixed bottom-28 right-6 z-50 flex items-center gap-2">
         <button
-          onClick={() => setAutoCycle(v => !v)}
+          onClick={() => setAutoCycle(!autoCycle)}
           className={`w-12 h-12 glass rounded-full border border-premium-600/50 flex items-center justify-center transition-all duration-300 hover-scale hover-glow ${autoCycle ? 'bg-gradient-accent' : 'bg-premium-900'}`}
           aria-label="Toggle auto theme cycle"
         >
