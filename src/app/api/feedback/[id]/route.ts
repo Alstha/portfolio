@@ -1,28 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db'
 import { getCurrentUser } from '@/lib/auth'
 
-type RouteSegment = {
-  params: Promise<{ id: string }>
-}
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: NextRequest,
-  segment: RouteSegment
-): Promise<NextResponse> {
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = await segment.params
     const user = await getCurrentUser()
     if (!user || user.role !== 'insider') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
 
     const feedback = await prisma.feedback.findUnique({
-      where: { id }
+      where: { id: params.id },
     })
 
     if (!feedback) {
-      return NextResponse.json({ error: 'Feedback not found' }, { status: 404 })
+      return NextResponse.json(
+        { error: 'Feedback not found' },
+        { status: 404 }
+      )
     }
 
     return NextResponse.json(feedback)
@@ -37,13 +41,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  segment: RouteSegment
-): Promise<NextResponse> {
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = await segment.params
     const user = await getCurrentUser()
     if (!user || user.role !== 'insider') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
 
     const body = await request.json()
@@ -56,12 +62,12 @@ export async function PUT(
       )
     }
 
-    const updatedFeedback = await prisma.feedback.update({
-      where: { id },
-      data: { name, rating, comment }
+    const feedback = await prisma.feedback.update({
+      where: { id: params.id },
+      data: { name, rating, comment },
     })
 
-    return NextResponse.json(updatedFeedback)
+    return NextResponse.json(feedback)
   } catch (error) {
     console.error('Error updating feedback:', error)
     return NextResponse.json(
@@ -73,20 +79,25 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  segment: RouteSegment
-): Promise<NextResponse> {
+  { params }: { params: { id: string } }
+) {
   try {
-    const { id } = await segment.params
     const user = await getCurrentUser()
     if (!user || user.role !== 'insider') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
 
     await prisma.feedback.delete({
-      where: { id }
+      where: { id: params.id },
     })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json(
+      { message: 'Feedback deleted successfully' },
+      { status: 200 }
+    )
   } catch (error) {
     console.error('Error deleting feedback:', error)
     return NextResponse.json(
