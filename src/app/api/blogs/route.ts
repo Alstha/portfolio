@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
+import { getCurrentUser } from '@/lib/auth'
 
 export async function GET() {
   try {
@@ -21,7 +22,8 @@ export async function GET() {
     })
 
     return NextResponse.json(blogs)
-  } catch {
+  } catch (error) {
+    console.error('Error fetching blogs:', error)
     return NextResponse.json(
       { error: 'Failed to fetch blogs' },
       { status: 500 }
@@ -31,8 +33,23 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await getCurrentUser()
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
     const body = await request.json()
-    const { title, content, excerpt, image, published, userId } = body
+    const { title, content, excerpt, image, published } = body
+
+    if (!title || !content) {
+      return NextResponse.json(
+        { error: 'Title and content are required' },
+        { status: 400 }
+      )
+    }
 
     const blog = await prisma.blog.create({
       data: {
@@ -41,7 +58,7 @@ export async function POST(request: NextRequest) {
         excerpt,
         image,
         published,
-        userId,
+        userId: user.id,
       },
       include: {
         user: {
@@ -54,7 +71,8 @@ export async function POST(request: NextRequest) {
     })
 
     return NextResponse.json(blog, { status: 201 })
-  } catch {
+  } catch (error) {
+    console.error('Error creating blog:', error)
     return NextResponse.json(
       { error: 'Failed to create blog' },
       { status: 500 }
