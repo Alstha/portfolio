@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-export default function About() {
+export default function About({ projectCount }: { projectCount?: number }) {
   const [activeCard, setActiveCard] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
 
@@ -20,28 +20,28 @@ export default function About() {
       icon: '⚡',
       title: 'AI/ML Enthusiast',
       color: 'from-slate-600 to-slate-800',
-      bgColor: 'bg-slate-800/20',
+      bgColor: 'bg-slate-800/60',
       borderColor: 'border-slate-600/30'
     },
     {
       icon: '🚀',
       title: 'Tech Startup Founder',
       color: 'from-slate-600 to-slate-800',
-      bgColor: 'bg-slate-800/20',
+      bgColor: 'bg-slate-800/60',
       borderColor: 'border-slate-600/30'
     },
     {
       icon: '🎓',
       title: 'Student at Islington',
       color: 'from-slate-600 to-slate-800',
-      bgColor: 'bg-slate-800/20',
+      bgColor: 'bg-slate-800/60',
       borderColor: 'border-slate-600/30'
     },
     {
       icon: '📍',
       title: 'From Nepal',
       color: 'from-slate-600 to-slate-800',
-      bgColor: 'bg-slate-800/20',
+      bgColor: 'bg-slate-800/60',
       borderColor: 'border-slate-600/30'
     }
   ]
@@ -129,7 +129,7 @@ export default function About() {
 
           {/* Profile Section */}
           <div className="relative">
-            <div className="glass rounded-3xl p-12 border border-premium-600/20 card-hover relative overflow-hidden">
+            <div className="glass rounded-3xl p-12 border border-premium-600/20 card-hover relative overflow-hidden bg-premium-900/80">
               {/* Animated Background Pattern */}
               <div className="absolute inset-0 opacity-5">
                 <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-accent rounded-full blur-3xl animate-pulse"></div>
@@ -173,15 +173,15 @@ export default function About() {
                 {/* Interactive Stats */}
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-accent-400 mb-1">18</div>
+                    <div className="text-2xl font-bold text-white mb-1">18</div>
                     <div className="text-xs text-white">Age</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-accent-400 mb-1">12+</div>
+                    <div className="text-2xl font-bold text-white mb-1">{projectCount ?? '...'}</div>
                     <div className="text-xs text-white">Projects</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-accent-400 mb-1">∞</div>
+                    <div className="text-2xl font-bold text-white mb-1">∞</div>
                     <div className="text-xs text-white">Potential</div>
                   </div>
                 </div>
