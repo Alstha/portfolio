@@ -141,7 +141,7 @@ export default function Contact() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500"
+                      className="w-full px-5 py-4 bg-transparent border border-[var(--accent)] rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 transition-all duration-300 hover:border-[var(--accent)]"
                       placeholder="Your name"
                     />
                   </div>
@@ -157,7 +157,7 @@ export default function Contact() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500"
+                      className="w-full px-5 py-4 bg-transparent border border-[var(--accent)] rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 transition-all duration-300 hover:border-[var(--accent)]"
                       placeholder="your.email@example.com"
                     />
                   </div>
@@ -174,7 +174,7 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-5 py-4 bg-premium-800/50 border border-premium-600/30 rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20 transition-all duration-300 hover:border-premium-500 resize-none"
+                    className="w-full px-5 py-4 bg-transparent border border-[var(--accent)] rounded-xl text-white placeholder-premium-400 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 transition-all duration-300 hover:border-[var(--accent)] resize-none"
                     placeholder="Tell me about your project or just say hello!"
                   />
                 </div>

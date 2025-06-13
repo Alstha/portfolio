@@ -77,7 +77,7 @@ export default function Feedback() {
               value={feedback.name}
               onChange={(e) => setFeedback({ ...feedback, name: e.target.value })}
               required
-              className="w-full px-4 py-2 bg-[var(--background)]/50 border border-[var(--border)]/50 rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              className="w-full px-4 py-2 bg-transparent border border-[var(--accent)] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
             />
           </div>
 
@@ -106,7 +106,7 @@ export default function Feedback() {
               placeholder="Any comments? (optional)"
               value={feedback.comment}
               onChange={(e) => setFeedback({ ...feedback, comment: e.target.value })}
-              className="w-full px-4 py-2 bg-[var(--background)]/50 border border-[var(--border)]/50 rounded-lg text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+              className="w-full px-4 py-2 bg-transparent border border-[var(--accent)] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
               rows={3}
             />
           </div>
