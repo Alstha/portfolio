@@ -78,7 +78,7 @@ export async function POST(
       content,
       userId: user.id,
       userName: user.name,
-      userAvatar: user.avatar,
+      userAvatar: user.avatar || null,
       createdAt: new Date().toISOString(),
     }
 
