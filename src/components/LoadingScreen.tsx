@@ -74,10 +74,10 @@ export default function LoadingScreen() {
           <div className="w-20 h-20 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-4 animate-bounce">
             <span className="text-white text-3xl font-bold">A</span>
           </div>
-          <h1 className="text-3xl font-bold text-premium-50 mb-2 animate-fade-in">
+          <h1 className="text-3xl font-bold text-white mb-2 animate-fade-in">
             Alson Shrestha
           </h1>
-          <p className="text-premium-300 text-sm animate-fade-in delay-300">
+          <p className="text-white text-sm animate-fade-in delay-300">
             AI/ML Enthusiast & Tech Startup Founder
           </p>
         </div>
@@ -102,13 +102,13 @@ export default function LoadingScreen() {
             ></div>
           </div>
           
-          <p className="text-premium-400 text-sm">
+          <p className="text-white text-sm">
             Loading amazing content... {Math.round(progress)}%
           </p>
         </div>
 
         {/* Loading Text */}
-        <div className="space-y-2 text-premium-300 text-sm">
+        <div className="space-y-2 text-white text-sm">
           <p className="animate-fade-in delay-500">🚀 Preparing AI/ML showcase...</p>
           <p className="animate-fade-in delay-700">💡 Loading innovative projects...</p>
           <p className="animate-fade-in delay-900">🌟 Setting up premium experience...</p>
